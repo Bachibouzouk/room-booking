@@ -1,0 +1,25 @@
+<html>
+
+<body>
+
+<table align="center" border=1 cellpadding=2>
+
+<tr>
+
+<th>Sun <th>Mon <th>Tue <th>Wed <th>Thu <th>Fri <th>Sat
+
+</tr>
+{%for week in dates %}
+<tr>
+{%for day in week %}
+  <td> {{day}} </td>
+{%endfor%}
+</tr>
+{%endfor%}
+
+
+</table>
+
+</body>
+
+</html>
