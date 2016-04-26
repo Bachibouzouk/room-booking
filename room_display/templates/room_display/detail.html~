@@ -1,0 +1,23 @@
+<h1>{{ room.name }}</h1>
+
+{% if booking_list %}
+    <ul>
+    {% for booking in booking_list %}
+        <li>{{booking.date}}</li>
+
+<!--<a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>-->
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No bookings are available.</p>
+{% endif %}
+
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+{% endfor %}
+<input type="submit" value="Vote" />
+</form>

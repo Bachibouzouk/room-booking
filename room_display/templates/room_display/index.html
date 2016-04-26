@@ -1,0 +1,13 @@
+just here, I need to find a way to resolve my URL
+
+{% if room_list %}
+    <ul>
+    {% for room in room_list %}
+        <li><a href="/room_display/{{room.name}}/">{{ room.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No rooms are available.</p>
+{% endif %}
+
+

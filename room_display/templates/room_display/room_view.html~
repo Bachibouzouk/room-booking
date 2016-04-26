@@ -1,0 +1,13 @@
+<h1>{{ room.name }}</h1>
+
+{% if booking_list %}
+    <ul>
+    {% for booking in booking_list %}
+        <li>{{booking.display()}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No bookings are available.</p>
+{% endif %}
+
+
