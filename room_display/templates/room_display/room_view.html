@@ -11,3 +11,36 @@
 {% endif %}
 
 
+
+<table align="center" border=1 cellpadding=2>
+
+<tr>
+<th> Time
+{%for weekday in weekdays %}
+<th>{{weekday}} 
+{%endfor%}
+
+</tr>
+<tr>
+<td>  </td>
+{%for day in dates %}
+  <td> <a href="" target="_self">{{day}}</a> </td>
+{%endfor%}
+</tr>
+{%for time in timeslots %}
+<tr>
+  <td> {{time}} </td>
+
+{%for day in dates %}
+  <td> <a href="" target="_self">booknow</a></td>
+{%endfor%}
+</tr>
+
+{%endfor%}
+
+
+
+</table>
+
+
+

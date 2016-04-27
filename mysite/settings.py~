@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '7nmp+1)mah*t98)%jdb^z!h*o74nkbqtd*7hg_)9&@r-z5t#x='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog'
+#    'blog',
+    'room_display.apps.RoomDisplayConfig'
 ]
 
 MIDDLEWARE_CLASSES = [

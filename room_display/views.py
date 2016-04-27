@@ -2,6 +2,8 @@ from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.template import loader
 from django.shortcuts import render,get_object_or_404
 
+from .date_play import get_month_dates,get_next_seven_days,timeslots
+
 from django.core.urlresolvers import reverse
 
 from .models import Classroom, Booking
@@ -36,6 +38,7 @@ def roomview2(request,room_name):
     try:
         room=Classroom.objects.get(name=room_name)
         booking_list = room.booking_set.all()
+        dates,weekdays=get_next_seven_days()
     except Classroom.DoesNotExist:
         raise Http404("Question does not exist")
-    return render(request, 'room_display/room_view.html', {'room': room,'booking_list':booking_list})
+    return render(request, 'room_display/room_view.html', {'room': room,'booking_list':booking_list,'dates':dates,'weekdays':weekdays,"timeslots":timeslots})

@@ -1,0 +1,12 @@
+from django.core.management.base import BaseCommand, CommandError
+from polls.models import Question as Poll
+
+import room_display.models as m
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        # now do the things that you want with your models here
+        cr=m.Classroom(name="Leacock132",location="Leacock",number_seats=700)
+
+        cr.save()

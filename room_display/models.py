@@ -3,15 +3,16 @@ from random import randint
 from django.utils import timezone
 
 
-def random_date(start=timezone.datetime(1990,10,1,10,2), end=timezone.datetime.now()):
+def random_date(start=timezone.datetime(1990,10,1,10,2,tzinfo=timezone.utc), end=timezone.now()):
+    
     return start + timezone.timedelta(
         seconds=randint(0, int((end - start).total_seconds())))
 
 
 class Classroom(models.Model):
     """a classroom has a name and a location plus a number of seats"""
-    name = models.CharField(max_length=200)
-    location = models.CharField(max_length=200)
+    name = models.CharField(max_length = 200, unique = True)
+    location = models.CharField(max_length = 200)
     number_seats = models.IntegerField() 
     
     def __str__(self):
@@ -23,6 +24,9 @@ class Booking(models.Model):
     classroom= models.ForeignKey(Classroom, on_delete=models.CASCADE)
     date_start = models.DateTimeField(default=timezone.now)
     date_stop = models.DateTimeField(default=timezone.now)
+    
+    email = models.EmailField(default="abc@mail.mcgill.ca")
+    
     max_booking = 4 #hours
 
     def __str__(self):
