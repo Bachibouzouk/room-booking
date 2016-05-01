@@ -46,39 +46,41 @@ class TimeSlot():
         if datestr:
            
             self.date_start,self.date_stop = convert_timeslot_to_date(date)
+            self.duration = (self.date_stop - self.date_start).total_seconds()/3600.
             
         else:
+            
             if hour == None:
                 self.date_start = date
             else:
                 self.date_start = timezone.datetime.combine(date,datetime.time(hour))
 
-        #make sure the date is not naive
-#        self.date_start.replace(tzinfo=timezone.pytz.utc)            
+                 
             
             self.duration = duration
 
             self.date_stop = self.date_start + timezone.timedelta(hours=self.duration)
         
         #make sure the date is not naive
-#        self.date_stop.replace(tzinfo=timezone.pytz.utc) 
+        self.date_start = self.date_start.replace(tzinfo=timezone.utc) 
+        #make sure the date is not naive
+        self.date_stop = self.date_stop.replace(tzinfo=timezone.utc) 
         
     def __add__(self, TS_instance):
         """add two time slots together provided they are concommitent"""
         if isinstance(TS_instance,self.__class__):
             if TS_instance.date_start.strftime("%Y-%m-%d %H:%M") == self.date_stop.strftime("%Y-%m-%d %H:%M"):
                 duration = self.duration + TS_instance.duration
-                return TimeSlot(self.date_start,duration)
+                return TimeSlot(self.date_start, duration = duration)
             else:
-                print("Your two instances of %s start and end time are not concommittent"%(self.__class__.__name__))
-                print("Instance 1 : %s"%(self))
-                print("Instance 2 : %s"%(TS_instance))
+                msg = """Your two instances of %s start and end time are not concommittent\nInstance 1 : %s\nInstance 2 : %s"""%(self.__class__.__name__,self,TS_instance)
+                raise(ValueError,msg)
                 
         elif isinstance(TS_instance,int):
             duration = self.duration + TS_instance
-            return TimeSlot(self.date_start,duration)
+            return TimeSlot(self.date_start, duration = duration)
         else:
-            msg="""You are trying to add a %s instance with a wrong type\nInstance 1 : %s\nInstance 2 : %s"""%(self.__class__.__name__,self,TS_instance)
+            msg = """You are trying to add a %s instance with a wrong type\nInstance 1 : %s\nInstance 2 : %s"""%(self.__class__.__name__,self,TS_instance)
   
             raise(TypeError,msg)
     def __str__(self):
@@ -102,6 +104,31 @@ def convert_timeslot_to_date(datestr):
             date_stop = timezone.datetime.strptime(date+duration_stop,timefmt)
             
             return date_start,date_stop
+
+def append_timeslot(timeslot_list,datestr=True):
+    
+    appended_ts_list = []
+    start = TimeSlot(timeslot_list.pop(0),datestr=datestr)
+#    stop = start
+    while not len(timeslot_list) == 0:
+        cont = TimeSlot(timeslot_list.pop(0),datestr=datestr)
+#        print(cont)
+        try:
+#            print "I am here"
+            start = start + cont
+#            print start
+        except:        
+            appended_ts_list.append(start)
+#            print("sequence %i to %i"%(start, stop))
+            start = cont
+#            stop = start
+    
+    appended_ts_list.append(start)
+
+    return appended_ts_list
+#    print("sequence %i to %i"%(start, stop))
+    
+    
     
 def get_next_seven_days():
     today = timezone.now()
@@ -147,22 +174,35 @@ def get_month_dates(cur_month = datetime.date.today().month):
 #        d=timezone.datetime.combine(date,datetime.time(t))
 #        d.replace(tzinfo=timezone.pytz.utc)
 #        print d.isoformat()
-    
-ts1=TimeSlot(datetime.datetime.now())
-date="21:07"
-print ts1.date_start
-import time
+#if __name__=="__main__":
 
-timefmt="%H:%M"
-#print datetime.time.strptime(date,timefmt).
-#adate = datetime.datetime.fromtimestamp("2016-04-30 19:59:27.598494")
-ts2=TimeSlot("2016-05-01 from 10:00 to 11:00",datestr=True)
-#print ts1
-print ts2
-#ts3 = ts1 + ts2
-#print ts3
-#
-#ts4 = ts1 + 5
-#print ts4
 
-#ts5 = ts1 + "34"
+
+#    ts_list = ['2016-05-01 from 08:00 to 09:00', '2016-05-01 from 09:00 to 10:00', '2016-05-02 from 10:00 to 11:00', '2016-05-02 from 11:00 to 12:00']
+##
+#    append_timeslot(ts_list)    
+#    1+None
+#    e=[1,2,3,6,7,8,10,11]
+#    start=e.pop(0)
+#    stop=start
+#    while not len(e) == 0:
+#        cont=e.pop(0)
+#        if cont-stop == 1:
+#            stop=cont
+#        else:        
+#            print("sequence %i to %i"%(start,stop))
+#            start=cont
+#            stop=start
+#    print("sequence %i to %i"%(start,stop))
+#    ts1=TimeSlot("2016-05-01 from 09:00 to 10:00",datestr=True)
+##    date="21:07"
+##    print ts1.date_start
+##    
+##    timefmt="%H:%M"
+##    #print datetime.time.strptime(date,timefmt).
+#    #adate = datetime.datetime.fromtimestamp("2016-04-30 19:59:27.598494")
+#    ts2=TimeSlot("2016-05-01 from 10:00 to 11:00",datestr=True)
+#    print ts1
+#    print ts2
+#    ts1 = ts1 + ts2
+#    print ts1

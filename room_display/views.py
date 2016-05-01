@@ -2,7 +2,7 @@ from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.template import loader
 from django.shortcuts import render,get_object_or_404
 
-from .date_play import get_month_dates,get_next_seven_days,timeslots,TimeSlot
+from .date_play import get_month_dates,get_next_seven_days,timeslots,TimeSlot,append_timeslot
 
 from django.core.urlresolvers import reverse
 
@@ -35,16 +35,29 @@ class IndexView(generic.ListView):
 
 def roomview(request,room_name,counter_day=None,counter_time=None,time=None):
 
-    if request.method == 'POST':
-        requested_bookings = request.POST.getlist("Book")
-        for i in requested_bookings:
-            print(isinstance(i,TimeSlot))
-#        d=request.POST.dict()
-#        print(d.keys())
-#        print(d["Book"])
+    
             
     try:
         room=Classroom.objects.get(name=room_name)
+        
+        if request.method == 'POST':
+            query_dict = dict(request.POST)
+            if "Book" in query_dict.keys():
+                requested_bookings = request.POST.getlist("Book")
+            
+                booking_timeslots=append_timeslot(requested_bookings)
+                
+                for booking_timeslot in booking_timeslots:
+                    print(booking_timeslot)
+                    print(booking_timeslot.date_start)
+                    print(booking_timeslot.date_stop)
+                    room.booking_set.create(date_start = booking_timeslot.date_start, date_stop = booking_timeslot.date_stop, email="a@b.c")
+            elif "clear bookings" in query_dict.keys():
+                """ this should be removed in the published version """
+                room.booking_set.all().delete()
+        
+        
+        
         booking_list = room.booking_set.all()
         dates,weekdays,booktime_list=get_next_seven_days()
         if not time == None:

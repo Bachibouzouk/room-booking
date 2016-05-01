@@ -50,3 +50,9 @@
   <input type="submit" value="Book">
 </form> 
 
+<form action="{% url 'room_display:room_view' room.name %}" method="post">
+	{% csrf_token %}
+<input type="hidden" name="clear bookings" value="Clear">
+<input type="submit" value="Clear bookings">
+</form> 
+

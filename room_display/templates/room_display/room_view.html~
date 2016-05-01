@@ -34,7 +34,7 @@
 {%for t in times %}
 
 
-  <td> <input type="checkbox" name="Book" value="{{ t}}"> Book this </td>
+  <td> <input type="checkbox" name="Book" value="{{ t }}"> Book this </td>
 
 
 {%endfor%}
@@ -48,5 +48,10 @@
 
 
   <input type="submit" value="Book">
+</form> 
+
+<form action="{% url 'room_display:room_view' room.name %}" method="post">
+	{% csrf_token %}
+<input type="submit" value="Clear bookings">
 </form> 
 
