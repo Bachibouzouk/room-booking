@@ -10,8 +10,8 @@
     <p>No bookings are available.</p>
 {% endif %}
 
-
-
+<form action="{% url 'room_display:room_view' room.name %}" method="post">
+	{% csrf_token %}
 <table align="center" border=1 cellpadding=2>
 
 <tr>
@@ -24,23 +24,29 @@
 <tr>
 <td>  </td>
 {%for day in dates %}
-  <td> <a href="" target="_self">{{day}}</a> </td>
+  <td> {{day}} </td>
 {%endfor%}
 </tr>
-{%for time in timeslots %}
+{%for times in booktime_list %}
 <tr>
-  <td> {{time}} </td>
+  <td> {{times.0.hour}} </td>
 
-{%for day in dates %}
-  <td> <a href="" target="_self">booknow</a></td>
+{%for t in times %}
+
+
+  <td> <input type="checkbox" name="Book" value="{{ t }}"> Book this </td>
+
+
 {%endfor%}
 </tr>
 
 {%endfor%}
-
-
 
 </table>
 
 
+
+
+  <input type="submit" value="Book">
+</form> 
 

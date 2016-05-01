@@ -1,0 +1,23 @@
+Available Rooms
+
+ <form action="{% url 'room_display:available_rooms' %}" method="post">
+	{% csrf_token %}
+  Capacity: <input type="text" name="capacity">
+  <input type="submit" value="capacity">
+</form> 
+
+
+{% if capacity == "ValueError" %}
+The capacity is not good</br>
+
+{% endif %}
+
+{% if room_list %}
+    <ul>
+    {% for room in room_list %}
+        <li><a href="{% url 'room_display:room_view' room.name %}">{{ room.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    No rooms are available.
+{% endif %}
