@@ -40,6 +40,7 @@ class TimeSlot():
     date_start = None
     duration = None
     date_stop = None
+    has_booking = False
     
     def __init__(self,date,hour=None,duration = booking_step,datestr=False):
         """create a TimeSlot with a start date and a duration"""
@@ -80,7 +81,9 @@ class TimeSlot():
             duration = self.duration + TS_instance
             return TimeSlot(self.date_start, duration = duration)
         else:
-            msg = """You are trying to add a %s instance with a wrong type\nInstance 1 : %s\nInstance 2 : %s"""%(self.__class__.__name__,self,TS_instance)
+            msg = """You are trying to add a %s instance with a wrong type\n
+                     Instance 1 : %s\nInstance 2 : %s
+                  """%(self.__class__.__name__,self,TS_instance)
   
             raise(TypeError,msg)
     def __str__(self):
@@ -100,8 +103,8 @@ def convert_timeslot_to_date(datestr):
 
             timefmt="%Y-%m-%d %H:%M"
            
-            date_start = timezone.datetime.strptime(date+duration_start,timefmt)
-            date_stop = timezone.datetime.strptime(date+duration_stop,timefmt)
+            date_start = timezone.datetime.strptime(date+duration_start,timefmt).replace(tzinfo=timezone.utc)
+            date_stop = timezone.datetime.strptime(date+duration_stop,timefmt).replace(tzinfo=timezone.utc)
             
             return date_start,date_stop
 
@@ -176,6 +179,7 @@ def get_month_dates(cur_month = datetime.date.today().month):
 #        print d.isoformat()
 #if __name__=="__main__":
 
+booked_date=['2016-05-01 from 18:00 to 19:00', '2016-05-01 from 11:00 to 14:00', '2016-05-02 from 20:00 to 22:00']
 
 
 #    ts_list = ['2016-05-01 from 08:00 to 09:00', '2016-05-01 from 09:00 to 10:00', '2016-05-02 from 10:00 to 11:00', '2016-05-02 from 11:00 to 12:00']

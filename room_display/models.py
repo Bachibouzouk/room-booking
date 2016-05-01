@@ -2,6 +2,9 @@ from django.db import models
 from random import randint
 from django.utils import timezone
 
+from .date_play import convert_timeslot_to_date, TimeSlot
+
+
 
 def random_date(start=timezone.datetime(1990,10,1,10,2,tzinfo=timezone.utc), end=timezone.now()):
     
@@ -14,9 +17,44 @@ class Classroom(models.Model):
     name = models.CharField(max_length = 200, unique = True)
     location = models.CharField(max_length = 200)
     number_seats = models.IntegerField(default = 1) 
+        
     
     def __str__(self):
         return self.name
+        
+    def is_booked(self,date):
+        """
+            will return false if there is no conflict with existing bookings
+            will return true otherwise
+            any lists or nested list can be passed as an argument
+            numpy would do a faster job...
+        """
+        
+        if hasattr(date,'__iter__'):
+            dates = date
+            answers = []
+            for date in dates:
+                answers.append(self.is_booked(date))
+            return answers
+        
+        if isinstance(date,TimeSlot):
+            conflicts = self.booking_set.filter(date_start__lt=date.date_stop,date_stop__gt=date.date_start)
+            if len(conflicts):
+                return True
+            else:
+                return False
+        elif isinstance(date,str):
+            date_start,date_stop=convert_timeslot_to_date(date)
+            conflicts = self.booking_set.filter(date_start__lt=date_stop,date_stop__gt=date_start)
+            if len(conflicts):
+                return True
+            else:
+                return False
+        else:
+            msg = """The method cannot take a %s type as an argument, the accepted types are %s and string
+                  """%(type(date).__name__,TimeSlot.__name__)
+            print(msg)
+            raise TypeError(msg)
 
         
 class Booking(models.Model):

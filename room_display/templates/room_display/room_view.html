@@ -1,5 +1,6 @@
 <h1>{{ room.name }}</h1>
 
+{% comment %}
 {% if booking_list %}
     <ul>
     {% for booking in booking_list %}
@@ -9,7 +10,7 @@
 {% else %}
     <p>No bookings are available.</p>
 {% endif %}
-
+{% endcomment %}
 <form action="{% url 'room_display:room_view' room.name %}" method="post">
 	{% csrf_token %}
 <table align="center" border=1 cellpadding=2>
@@ -28,14 +29,21 @@
 {%endfor%}
 </tr>
 {%for times in booktime_list %}
-<tr>
-  <td> {{times.0.hour}} </td>
+
 
 {%for t in times %}
+{%if forloop.counter == 1%}
+<tr>
+  <td> {{t.0.hour}} </td>
+{%endif%}
 
+{%if t.1 == True%}
+  <td>  Booked  </td>
+{%endif%}
 
-  <td> <input type="checkbox" name="Book" value="{{ t }}"> Book this </td>
-
+{%if t.1 == False%}
+  <td> <input type="checkbox" name="Book" value="{{ t.0 }}"> Book  </td>
+{%endif%}
 
 {%endfor%}
 </tr>

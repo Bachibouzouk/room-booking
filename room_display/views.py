@@ -41,17 +41,19 @@ def roomview(request,room_name,counter_day=None,counter_time=None,time=None):
         room=Classroom.objects.get(name=room_name)
         
         if request.method == 'POST':
+            
             query_dict = dict(request.POST)
+            
             if "Book" in query_dict.keys():
                 requested_bookings = request.POST.getlist("Book")
             
-                booking_timeslots=append_timeslot(requested_bookings)
+                #append the timeslots together if they are concomittent
+                booking_timeslots = append_timeslot(requested_bookings)
                 
+                #add the bookings to the room
                 for booking_timeslot in booking_timeslots:
-                    print(booking_timeslot)
-                    print(booking_timeslot.date_start)
-                    print(booking_timeslot.date_stop)
                     room.booking_set.create(date_start = booking_timeslot.date_start, date_stop = booking_timeslot.date_stop, email="a@b.c")
+            
             elif "clear bookings" in query_dict.keys():
                 """ this should be removed in the published version """
                 room.booking_set.all().delete()
@@ -59,7 +61,16 @@ def roomview(request,room_name,counter_day=None,counter_time=None,time=None):
         
         
         booking_list = room.booking_set.all()
-        dates,weekdays,booktime_list=get_next_seven_days()
+        booked_times = [booking.display() for booking in booking_list]
+        print(booked_times)
+        dates,weekdays,booktime_list = get_next_seven_days()
+        conflict_list = room.is_booked(booktime_list)
+        
+        
+#        [zip(bl,cl) for bl, cl in zip(booktime_list, conflict_list)]
+            
+                
+        
         if not time == None:
             timeslot = time
         else:
@@ -69,7 +80,7 @@ def roomview(request,room_name,counter_day=None,counter_time=None,time=None):
     return render(request, 'room_display/room_view.html',
                   {'room': room, 'booking_list': booking_list, 'dates': dates,
                   'weekdays': weekdays, "timeslots": timeslots,
-                  "timeslot": timeslot,"booktime_list":booktime_list})
+                  "timeslot": timeslot,"booktime_list":[zip(bl,cl) for bl, cl in zip(booktime_list, conflict_list)]})
 
 def makebookingview(request):
     """This view should get a room name and a time (and an email),create a booking and assign it to the room"""
