@@ -69,9 +69,10 @@ class Booking(models.Model):
 
     
     def __str__(self):
-        return "%s to %s"%(
+        return "%s to %s by %s"%(
         self.date_start.strftime("%Y-%m-%d from %H:%M"),
-        self.date_stop.strftime("%H:%M"))
+        self.date_stop.strftime("%H:%M"),
+        self.email)
 
     def display(self):
         return self.__str__()

@@ -3,7 +3,14 @@ Available Rooms
  <form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
   Capacity: <input type="text" name="capacity">
-  <input type="submit" value="capacity">
+  <input type="submit" value="Search">
+</form> 
+
+ <form action="{% url 'room_display:available_rooms' %}" method="post">
+	{% csrf_token %}
+  Start date : Y<input type="number" name="year" min=2016 value=2016>-m<input type="number" name="month"min=1 max=12>-d<input type="number" name="day"> h<input type="number" name="hour">:M<input type="number" name="min">
+  Duration (units of {{step_time}} hour) : <input type="number" name="duration" value=1>
+  <input type="submit" value="Search">
 </form> 
 
 

@@ -6,7 +6,7 @@ from django.test import TestCase
 
 from .models import Classroom, Booking
 
-from .date_play import TimeSlot,get_next_seven_days
+from .date_play import TimeSlot
 
 
 class TimeSlotMethodTests(TestCase):

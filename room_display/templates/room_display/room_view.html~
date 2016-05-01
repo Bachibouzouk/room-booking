@@ -10,7 +10,7 @@
 {% else %}
     <p>No bookings are available.</p>
 {% endif %}
-{% end comment %}
+{% endcomment %}
 <form action="{% url 'room_display:room_view' room.name %}" method="post">
 	{% csrf_token %}
 <table align="center" border=1 cellpadding=2>
@@ -54,7 +54,7 @@
 
 
 
-
+  Email addess : <input type="email" name="Email"></br>
   <input type="submit" value="Book">
 </form> 
 
