@@ -67,6 +67,12 @@ class TimeSlot():
         #make sure the date is not naive
         self.date_stop = self.date_stop.replace(tzinfo=timezone.utc) 
         
+        if self.date_start > self.date_stop :
+            fmt = "%Y-%m-%d %H:%M"
+            raise(ValueError(
+            "The timeslot end (%s) cannot be earlier than its start (%s)"%(
+            self.date_stop.strftime(fmt),self.date_start.strftime(fmt))))
+        
     def __add__(self, TS_instance):
         """add two time slots together provided they are concommitent"""
         if isinstance(TS_instance,self.__class__):
