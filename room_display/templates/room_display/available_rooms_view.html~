@@ -20,7 +20,7 @@ Available Rooms
 The capacity is not good</br>
 
 {% endif %}
-
+{{ room_list }}
 {% if room_list %}
     <ul>
     {% for room in room_list %}

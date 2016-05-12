@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.shortcuts import render, get_object_or_404
 
+from django.utils import timezone
+
 from .date_play import get_month_dates, get_next_seven_days, timeslots, TimeSlot, append_timeslot, booking_step
 
 from django.core.urlresolvers import reverse
@@ -91,7 +93,9 @@ def makebookingview(request):
 
 def availableroomsview(request):
     """the capacity value should be tested to be positive integer"""
-
+    room_list = None
+    capacity = None
+    timecheck=SelectDateTime()
     try:
         if request.method == 'POST':
             query_dict = dict(request.POST)
@@ -100,6 +104,25 @@ def availableroomsview(request):
                 capacity = request.POST['capacity']
                 room_list = Classroom.objects.filter(
                     number_seats__gte=capacity)
+                    
+            if "hour" and "date" in query_dict.keys():
+                hour = float(request.POST['hour'])
+                date = timezone.datetime.strptime(request.POST['date'],"%Y-%m-%d")
+                
+#                if "duration" in query_dict.keys():
+#                    duration = float ()
+                
+                requested_datetime = TimeSlot(date, hour)
+#                print(requested_datetime)
+                cr = Classroom.objects.all()
+                good_cr =[]
+                for c in cr:
+                    if c.is_booked(requested_datetime):
+                        pass
+                    else:
+                        good_cr.append(c)
+                room_list = good_cr
+#                print(room_list)
 
             """
             here I should find a quick way to to make a datetime object with
@@ -119,14 +142,16 @@ def availableroomsview(request):
     except Classroom.DoesNotExist:
         raise Http404(
             "There is no room with number of seats greater than :" + str(capacity))
-    except ValueError or KeyError:
-        capacity = "ValueError"
-        room_list = None
-    else:
-        capacity = "None"
-        room_list = None
+            
+#    except ValueError or KeyError:
+#        capacity = "ValueError"
+#        room_list = None
+#    else:
+#        capacity = "None"
+#        room_list = None
+#        timecheck=SelectDateTime()
 #    if capacity == None:
 #            capacity = "None"
 #    calendar = Calendar()
-    timecheck=SelectDateTime()
+    
     return render(request, 'room_display/available_rooms_view.html', {"room_list": room_list, "capacity": capacity, "step_time": booking_step,"timecheck":timecheck})

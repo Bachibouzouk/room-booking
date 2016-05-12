@@ -18,6 +18,8 @@ class SelectDateTime(forms.Form):
 #    delivery_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
     hour = forms.ChoiceField(choices = HOUR_CHOICES)
     
+    idn = forms.HiddenInput()
+    
 #    minute = forms.ChoiceField(choices = MINUTE_CHOICES)
 
 class Calendar(forms.Form):

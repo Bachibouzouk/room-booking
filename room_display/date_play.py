@@ -50,6 +50,7 @@ dates_display = [d.strftime("%A %B %d") for d in dates]
 
 DATE_CHOICES = zip(dates, dates_display)
 HOUR_CHOICES = zip(timeslots, timeslots_display)
+
 #
 #if not minuteslots == None:
 #    minuteslots_display = ["%imin"%(t) for t in minuteslots]
@@ -214,7 +215,7 @@ def get_month_dates(cur_month=datetime.date.today().month):
 
 
 
-#print datetime.time(1,20)
+#print datetime.datetime.strptime("2016-10-02","%Y-%m-%d")
 
 # get_next_seven_days()
 # each new booking should have the time, so when we select the time wanted we can display all rooms which DO NOT clash

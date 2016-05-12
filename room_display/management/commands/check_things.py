@@ -10,27 +10,45 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # now do the things that you want with your models here
-        cr=Classroom.objects.get(name="Leacock132")
-        
-#        print(cr.booking_set.all())
-        ts=TimeSlot("2016-05-02 from 09:00 to 10:00",datestr=True)
-#        "2016-05-02 from 10:00 to 10:30"
-        print(cr.is_booked(ts))
-        
-        ts=TimeSlot("2016-05-02 from 11:00 to 12:00",datestr=True)
-        
-        print(cr.booking_set.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start))
-#        "2016-05-02 from 10:00 to 10:30"
-        print(cr.is_booked(ts))      
-        
-#        print(cr.booking_set.all())
-        ts=TimeSlot("2016-05-02 from 09:00 to 09:59",datestr=True)
-#        "2016-05-02 from 10:00 to 10:30"
-        print(cr.is_booked(ts))
-        
-        ts=TimeSlot("2016-05-02 from 11:01 to 12:00",datestr=True)
-#        "2016-05-02 from 10:00 to 10:30"
-        print(cr.is_booked(ts))        
+    
+   
+        ts=TimeSlot("2016-05-13 from 08:30 to 09:00",datestr=True)
+        cr = Classroom.objects.all()
+        good_cr =[]
+        for c in cr:
+            print(c.is_booked(ts))
+            if c.is_booked(ts):
+                pass
+            else:
+                good_cr.append(c)
+        print(good_cr)
+            
+        good_cr = Classroom.objects.filter(is_booked__ts == False)
+    
+    
+    
+    
+#        cr=Classroom.objects.get(name="Leacock132")
+#        
+##        print(cr.booking_set.all())
+#        ts=TimeSlot("2016-05-02 from 09:00 to 10:00",datestr=True)
+##        "2016-05-02 from 10:00 to 10:30"
+#        print(cr.is_booked(ts))
+#        
+#        ts=TimeSlot("2016-05-02 from 11:00 to 12:00",datestr=True)
+#        
+#        print(cr.booking_set.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start))
+##        "2016-05-02 from 10:00 to 10:30"
+#        print(cr.is_booked(ts))      
+#        
+##        print(cr.booking_set.all())
+#        ts=TimeSlot("2016-05-02 from 09:00 to 09:59",datestr=True)
+##        "2016-05-02 from 10:00 to 10:30"
+#        print(cr.is_booked(ts))
+#        
+#        ts=TimeSlot("2016-05-02 from 11:01 to 12:00",datestr=True)
+##        "2016-05-02 from 10:00 to 10:30"
+#        print(cr.is_booked(ts))        
         
 #        ts=TimeSlot("2016-05-02 from 10:00 to 13:30",datestr=True)
 ##        "2016-05-02 from 10:00 to 10:30"
