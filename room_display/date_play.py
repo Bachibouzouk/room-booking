@@ -31,10 +31,29 @@ weekday_names = ["Monday", "Tuesday", "Wednesday",
 #u = datetime.utcnow()
 # u = u.replace(tzinfo=pytz
 
-booking_step = 1  # unit hour
+booking_step = 0.5  # unit hour
 
-timeslots = range(8, 22, booking_step)
+timeslots = np.arange(7., 22., booking_step)
 
+if isinstance(booking_step, float):
+    timeslots_display = ["%02dh%02d"%(int(h),int((h-int(h))*60)) for h in timeslots]
+    
+elif isinstance(booking_step, int):
+    timeslots_display = ["%02dh"%(h) for h in timeslots]
+    
+else:
+    raise(TypeError,"booking_step variable is not the expected int or float type")
+    
+    
+dates = [(timezone.now() + datetime.timedelta(days=i)).date() for i in range(7)]
+dates_display = [d.strftime("%A %B %d") for d in dates]
+
+DATE_CHOICES = zip(dates, dates_display)
+HOUR_CHOICES = zip(timeslots, timeslots_display)
+#
+#if not minuteslots == None:
+#    minuteslots_display = ["%imin"%(t) for t in minuteslots]
+#    MINUTE_CHOICES = zip(minuteslots, minuteslots_display)
 
 class TimeSlot():
 
@@ -55,9 +74,19 @@ class TimeSlot():
 
             if hour == None:
                 self.date_start = date
-            else:
+                
+            elif isinstance(hour,int):
                 self.date_start = timezone.datetime.combine(
                     date, datetime.time(hour))
+                    
+            elif isinstance(hour,float):
+                hours = int(hour)
+                minutes = int((hour-hours) * 60)
+                self.date_start = timezone.datetime.combine(
+                    date, datetime.time(hours,minutes))
+            else:
+                raise(TypeError(
+                    "The argument for hour is not a float neither and int"))
 
             self.duration = duration
 
@@ -182,6 +211,10 @@ def get_month_dates(cur_month=datetime.date.today().month):
 # store the dates in a scheduler
     ws = np.reshape(dg, (nweeks + 1, 7))
     return ws
+
+
+
+#print datetime.time(1,20)
 
 # get_next_seven_days()
 # each new booking should have the time, so when we select the time wanted we can display all rooms which DO NOT clash

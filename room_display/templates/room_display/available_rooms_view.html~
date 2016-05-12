@@ -32,6 +32,8 @@ The capacity is not good</br>
 {% endif %}
 <form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
-{{calendar}}
+{{timecheck}}
   <input type="submit" value="Search">
 </form> 
+
+

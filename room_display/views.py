@@ -6,7 +6,7 @@ from .date_play import get_month_dates, get_next_seven_days, timeslots, TimeSlot
 
 from django.core.urlresolvers import reverse
 
-from .models import Classroom, Booking, Calendar, SelectTime
+from .models import Classroom, Booking, Calendar, SelectDateTime
 
 from django.views import generic
 """
@@ -127,6 +127,6 @@ def availableroomsview(request):
         room_list = None
 #    if capacity == None:
 #            capacity = "None"
-    calendar = Calendar()
-    timecheck=SelectTime()
-    return render(request, 'room_display/available_rooms_view.html', {"room_list": room_list, "capacity": capacity, "step_time": booking_step,"calendar":calendar,"timecheck":timecheck})
+#    calendar = Calendar()
+    timecheck=SelectDateTime()
+    return render(request, 'room_display/available_rooms_view.html', {"room_list": room_list, "capacity": capacity, "step_time": booking_step,"timecheck":timecheck})

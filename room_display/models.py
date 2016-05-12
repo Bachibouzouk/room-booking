@@ -3,7 +3,7 @@ from django import forms
 from random import randint
 from django.utils import timezone
 
-from .date_play import convert_timeslot_to_date, TimeSlot
+from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES#MINUTE_CHOICES
 
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
@@ -12,9 +12,13 @@ def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc)
         seconds=randint(0, int((end - start).total_seconds())))
 
 
-class SelectTime(forms.Form):
 
-    delivery_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+class SelectDateTime(forms.Form):
+    date = forms.ChoiceField(choices = DATE_CHOICES)#forms.DateField(widget = forms.SelectDateWidget(years=("2016","2017")))
+#    delivery_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+    hour = forms.ChoiceField(choices = HOUR_CHOICES)
+    
+#    minute = forms.ChoiceField(choices = MINUTE_CHOICES)
 
 class Calendar(forms.Form):
 
