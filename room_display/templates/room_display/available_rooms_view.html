@@ -1,3 +1,5 @@
+{%load static%}
+
 Available Rooms
 
  <form action="{% url 'room_display:available_rooms' %}" method="post">
@@ -28,3 +30,10 @@ The capacity is not good</br>
 {% else %}
     No rooms are available.
 {% endif %}
+<form action="{% url 'room_display:available_rooms' %}" method="post">
+	{% csrf_token %}
+{{calendar}}{{timecheck}}
+  <input type="submit" value="Search">
+</form> 
+
+
