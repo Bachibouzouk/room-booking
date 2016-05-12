@@ -12,7 +12,7 @@ class Command(BaseCommand):
         # now do the things that you want with your models here
     
    
-        ts=TimeSlot("2016-05-13 from 08:30 to 09:00",datestr=True)
+        ts=TimeSlot("2016-05-13 from 08:30 to 09:30",datestr=True)
         cr = Classroom.objects.all()
         good_cr =[]
         for c in cr:
@@ -22,10 +22,19 @@ class Command(BaseCommand):
             else:
                 good_cr.append(c)
         print(good_cr)
-            
-        good_cr = Classroom.objects.filter(is_booked__ts == False)
+        
+        bk = Booking.objects.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start)
+        
+        bad_cr = []
+        
+        for b in bk :
+            if not b.classroom in bad_cr:
+                bad_cr.append(b.classroom)
+        
+        print(bad_cr)
+#        good_cr = Classroom.objects.filter(is_booked__ts == False)
     
-    
+        
     
     
 #        cr=Classroom.objects.get(name="Leacock132")
