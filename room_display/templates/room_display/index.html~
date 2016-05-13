@@ -11,6 +11,6 @@ just here, I need to find a way to resolve my URL
 {% endif %}
 </p>
 <p>
-<li><a href="{% url 'room_display:available_rooms' %}">{{ Search available rooms across campus }}</a></li>
+<li><a href="{% url 'room_display:available_rooms' %}">Search available rooms across campus</a></li>
 </p>
 

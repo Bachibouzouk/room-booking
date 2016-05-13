@@ -2,13 +2,14 @@
 
 
 {% if booking_list %}
+Existing bookings
     <ul>
     {% for booking in booking_list %}
         <li>{{booking.display}}</li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No bookings are available.</p>
+    <p>No bookings are made currently.</p>
 {% endif %}
 {% comment %}
 {% endcomment %}
@@ -62,11 +63,13 @@
 <p>
 <li><a href="{% url 'room_display:index' %}">Back to index</a></li>
 </p>
+
 {% comment %}
 <form action="{% url 'room_display:room_view' room.name %}" method="post">
 	{% csrf_token %}
 <input type="hidden" name="clear bookings" value="Clear">
 <input type="submit" value="Clear bookings">
 </form> 
-{% end comment %}
+
+{% endcomment %}
 

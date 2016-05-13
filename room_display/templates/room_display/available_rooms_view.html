@@ -1,25 +1,32 @@
 {%load static%}
 
-Available Rooms
-
+<h>Look for a room</h>
+<p>
+Search by capacity
  <form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
   Capacity: <input type="text" name="capacity">
   <input type="submit" value="Search">
 </form> 
+</p>
 
- <form action="{% url 'room_display:available_rooms' %}" method="post">
+<p>
+Search by date
+<form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
-  Start date : Y<input type="number" name="year" min=2016 value=2016>-m<input type="number" name="month"min=1 max=12 value=5>-d<input type="number" name="day" value=1> h<input type="number" name="hour" value=10>:M<input type="number" name="min" value=0>
-  Duration (units of {{step_time}} hour) : <input type="number" name="duration" value=1>
+{{timecheck}}
   <input type="submit" value="Search">
 </form> 
+</p>
 
 
 {% if capacity == "ValueError" %}
 The capacity is not good</br>
 
 {% endif %}
+
+
+
 {% if room_list %}
     <ul>
     {% for room in room_list %}
@@ -29,11 +36,6 @@ The capacity is not good</br>
 {% else %}
     No rooms are available.
 {% endif %}
-<form action="{% url 'room_display:available_rooms' %}" method="post">
-	{% csrf_token %}
-{{timecheck}}
-  <input type="submit" value="Search">
-</form> 
 
 <p>
 <li><a href="{% url 'room_display:index' %}">Back to index</a></li>
