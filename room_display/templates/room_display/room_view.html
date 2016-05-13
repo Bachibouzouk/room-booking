@@ -59,9 +59,14 @@
   <input type="submit" value="Book">
 </form> 
 
+<p>
+<li><a href="{% url 'room_display:index' %}">Back to index</a></li>
+</p>
+{% comment %}
 <form action="{% url 'room_display:room_view' room.name %}" method="post">
 	{% csrf_token %}
 <input type="hidden" name="clear bookings" value="Clear">
 <input type="submit" value="Clear bookings">
 </form> 
+{% end comment %}
 

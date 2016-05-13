@@ -33,6 +33,8 @@ weekday_names = ["Monday", "Tuesday", "Wednesday",
 
 booking_step = 0.5  # unit hour
 
+#timeslots = range(7, 22, booking_step)
+
 timeslots = np.arange(7., 22., booking_step)
 
 if isinstance(booking_step, float):

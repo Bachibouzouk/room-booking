@@ -3,7 +3,7 @@ from django import forms
 from random import randint
 from django.utils import timezone
 
-from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES#MINUTE_CHOICES
+from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES #MINUTE_CHOICES
 
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
