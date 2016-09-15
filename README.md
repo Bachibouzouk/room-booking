@@ -35,12 +35,12 @@ On linux
 Creating a virtualenv
 ```
 #!python
-$ virtualenv --python=python3.4 .virtualenv/"my custom name"
+virtualenv --python=python3.4 .virtualenv/"my custom name"
 ```
 using the virtualenv
 ```
 #!python
-$ source .virtualenv/"my custom name"/bin/activate
+source .virtualenv/"my custom name"/bin/activate
 ```
 
 * Configuration
