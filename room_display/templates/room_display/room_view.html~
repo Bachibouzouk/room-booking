@@ -7,7 +7,7 @@
 Existing bookings
     <ul>
     {% for booking in booking_list %}
-        <li>{{booking.display}}</li>
+        <li>{{booking.display_timeslot}}, {{booking.email}}</li>
     {% endfor %}
     </ul>
 {% else %}
@@ -58,7 +58,7 @@ Existing bookings
 
 
 
-  Email addess : <input type="email" name="Email"></br>
+  Email addess : <input type="email" name="email"></br>
   <input type="submit" value="Book">
 </form> 
 

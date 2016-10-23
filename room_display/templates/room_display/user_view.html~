@@ -1,0 +1,10 @@
+<h1>All the bookings of {{user_name}}</h1>
+
+<ul>
+    {% for booking in booking_list %}
+        <li>{{booking.display_timeslot}}</li>
+    {% endfor %}
+</ul>
+
+
+

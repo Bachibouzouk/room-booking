@@ -1,6 +1,5 @@
 need to check if the email address is a mcgill one before I can accept the reservation (maybe send a check email)
 
-#done in check_things.py it is fairly easy :)
 need to be able to find all the booking made by one user
 
 need to be able to "hard book" any room and it should send a email to all users who had soft reservations

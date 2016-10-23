@@ -94,6 +94,17 @@ def roomview(request, room_name, counter_day=None, counter_time=None, time=None)
                    "timeslot": timeslot, "booktime_list": [zip(bl, cl) for bl, cl in zip(booktime_list, conflict_list)]})
 
 
+def userview(request,user_name):
+    """This view should get a room name and a time (and an email),create a booking and assign it to the room"""
+    
+    print(user_name)    
+
+    bk = Booking.objects.filter(email = user_name)
+    print(bk)
+    return render(request, 'room_display/user_view.html', {'user_name': user_name,
+                                                           'booking_list': bk})
+
+
 def makebookingview(request):
     """This view should get a room name and a time (and an email),create a booking and assign it to the room"""
     if request.method == 'POST':

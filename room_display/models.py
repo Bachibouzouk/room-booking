@@ -145,6 +145,11 @@ class Booking(models.Model):
 
     def display(self):
         return self.__str__()
+    
+    def display_timeslot(self):
+        return "%s to %s" % (
+            self.date_start.strftime("%Y-%m-%d from %H:%M"),
+            self.date_stop.strftime("%H:%M"))
 
     def reminder(self):
         """this function should send a reminder to the person who booked the meeting"""

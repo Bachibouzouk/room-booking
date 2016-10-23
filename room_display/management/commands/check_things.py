@@ -12,7 +12,7 @@ class Command(BaseCommand):
         # now do the things that you want with your models here
     
    
-        ts=TimeSlot("2016-05-13 from 08:30 to 09:30",datestr=True)
+        ts=TimeSlot("2016-10-25 from 08:00 to 09:30",datestr=True)
         cr = Classroom.objects.all()
         good_cr =[]
         for c in cr:
@@ -21,17 +21,33 @@ class Command(BaseCommand):
                 pass
             else:
                 good_cr.append(c)
+            """
+            this allows to find all the bookings made per room by one email after a given date
+            """
+            print(c.booking_set.filter(email = "troll@test.caution",date_start__gt=ts.date_start))
+        
+        
         print(good_cr)
+        print("#"*15)
         
-        bk = Booking.objects.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start)
         
-        bad_cr = []
+        """
+        this allows to find all the bookings made by one email after a given date
         
-        for b in bk :
-            if not b.classroom in bad_cr:
-                bad_cr.append(b.classroom)
+        """
+        bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
+        print(bk)
+#        bk = Booking.objects.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start)
         
-        print(bad_cr)
+                
+        
+#        bad_cr = []
+#        
+#        for b in bk :
+#            if not b.classroom in bad_cr:
+#                bad_cr.append(b.classroom)
+#        
+#        print(bad_cr)
 #        good_cr = Classroom.objects.filter(is_booked__ts == False)
     
         

@@ -7,7 +7,7 @@
 Existing bookings
     <ul>
     {% for booking in booking_list %}
-        <li>{{booking.display}}</li>
+        <li>{{booking.display_timeslot}} by <a href="{% url 'room_display:user_view' booking.email%}">{{booking.email}}</a></li>
     {% endfor %}
     </ul>
 {% else %}
