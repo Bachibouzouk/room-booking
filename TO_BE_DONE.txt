@@ -1,0 +1,14 @@
+need to check if the email address is a mcgill one before I can accept the reservation (maybe send a check email)
+
+need to be able to find all the booking made by one user
+
+need to be able to "hard book" any room and it should send a email to all users who had soft reservations
+
+need to find an available room for the time at which the user requests
+
+need to find a room depending on crossed field (room size, timeslots, etc...)
+
+need to create a log file of all booking made
+
+need to be able to update the periods where the rooms are hard booked
+
