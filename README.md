@@ -56,7 +56,15 @@ run
 python manage.py migrate
 ```
 
-* How to run tests
+* How to write commands to test your code
+Go into the folder "room_booking/room_display/management/commands/"
+Then create a ".py" file in which you run some code (like create an object and call its methods). You can execute that by typing :
+```
+#!python
+
+python manage.py your_code_file_name_without_extension
+```
+
 * Deployment instructions
 
 ### Contribution guidelines ###
