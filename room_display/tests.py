@@ -1,10 +1,8 @@
 from django.test import TestCase
 
 from django.utils import timezone
-from django.test import TestCase
 
-
-from .models import Classroom, Booking
+from .models import Classroom
 
 from .date_play import TimeSlot
 
@@ -64,37 +62,58 @@ class ClassRoomMethodTests(TestCase):
         
         for ts in timeslots:
             self.cr.booking_set.create(date_start = ts.date_start,
-                                       date_stop = ts.date_stop)
+                                       date_stop = ts.date_stop,
+                                       email = "test@test.ca")
         
         self.cr.save()
 
 
     def test_is_booked_method_conflict_end_during_existing_with(self):
         
-        ts=TimeSlot("2016-05-02 from 08:00 to 09:30",datestr=True)        
+        ts=TimeSlot("2016-05-02 from 08:00 to 09:30", datestr = True)        
         
-        self.assertEqual(self.cr.is_booked(ts),True)
+        self.assertEqual(self.cr.is_booked(ts), True)
         
     def test_is_booked_method_conflict_start_during_existing_booking(self):
         
-        ts=TimeSlot("2016-05-02 from 09:10 to 10:30",datestr=True)        
+        ts=TimeSlot("2016-05-02 from 09:10 to 10:30", datestr = True)        
         
-        self.assertEqual(self.cr.is_booked(ts),True)
+        self.assertEqual(self.cr.is_booked(ts), True)
    
     def test_is_booked_conflict_overlap_existing_booking(self):
         
-        ts=TimeSlot("2016-05-02 from 08:10 to 10:30",datestr=True)        
+        ts=TimeSlot("2016-05-02 from 08:10 to 10:30", datestr = True)        
         
-        self.assertEqual(self.cr.is_booked(ts),True)
+        self.assertEqual(self.cr.is_booked(ts), True)
         
     def test_is_booked_booking_starts_exactly_when_existing_booking_stops(self):
         
-        ts=TimeSlot("2016-05-02 from 13:00 to 14:00",datestr=True)        
+        ts=TimeSlot("2016-05-02 from 13:00 to 14:00", datestr = True)        
         
-        self.assertEqual(self.cr.is_booked(ts),False)
+        self.assertEqual(self.cr.is_booked(ts), False)
         
     def test_is_booked_booking_stops_exactly_when_existing_booking_starts(self):
         
-        ts=TimeSlot("2016-05-02 from 08:00 to 09:00",datestr=True)        
+        ts=TimeSlot("2016-05-02 from 08:00 to 09:00", datestr = True)        
         
-        self.assertEqual(self.cr.is_booked(ts),False)
+        self.assertEqual(self.cr.is_booked(ts), False)
+        
+    def test_make_soft_booking_booking_timeslot_already_exists(self):
+        
+        ts=TimeSlot("2016-05-02 from 09:00 to 10:00", datestr = True)        
+        num_previous_bookings = len(self.cr.booking_set.all())
+        
+        self.cr.make_soft_booking(ts, "test@test.ca")
+        num_current_bookings = len(self.cr.booking_set.all())
+        
+        self.assertEqual(num_previous_bookings,num_current_bookings)        
+        
+    def test_make_soft_booking_booking_timeslot_is_free(self):
+        
+        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
+        num_previous_bookings = len(self.cr.booking_set.all())
+        
+        self.cr.make_soft_booking(ts, "test@test.ca")
+        num_current_bookings = len(self.cr.booking_set.all())
+
+        self.assertEqual(num_previous_bookings+1,num_current_bookings)   

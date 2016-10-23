@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 
 from django.utils import timezone
 
+import datetime
+
 from room_display.models import Classroom, Booking, random_date
 
 from room_display.date_play import TimeSlot,get_next_seven_days
@@ -27,6 +29,7 @@ class Command(BaseCommand):
             print(c.booking_set.filter(email = "troll@test.caution",date_start__gt=ts.date_start))
         
         
+        
         print(good_cr)
         print("#"*15)
         
@@ -36,7 +39,9 @@ class Command(BaseCommand):
         
         """
         bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
-        print(bk)
+#        print(bk)
+#        'America/Montreal'
+
 #        bk = Booking.objects.filter(date_start__lt=ts.date_stop,date_stop__gt=ts.date_start)
         
                 

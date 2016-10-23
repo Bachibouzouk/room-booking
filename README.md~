@@ -70,13 +70,6 @@ python manage.py your_code_file_name_without_extension
 ### Contribution guidelines ###
 
 * Writing tests
-You can write tests in the room_booking/room_display/test.py file, to run them type 
-```
-#!python
-
-python manage.py test room_display 
-```
-
 * Code review
 * Other guidelines
 

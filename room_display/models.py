@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES #MINUTE_CHOICES
 
+LOG_FILE_NAME = "soft_bookings.log"
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
 
@@ -117,11 +118,21 @@ class Classroom(models.Model):
             #TODO : check that the email is valid (call a function from another
             #package)
             #check that the room isn't already booked
+       
+        
             if not self.is_booked(booking_timeslot):
                 self.booking_set.create(
                                     date_start=booking_timeslot.date_start,
                                     date_stop=booking_timeslot.date_stop,
                                     email=email)
+                
+                #keep a record of the soft booking made
+                of = open(LOG_FILE_NAME,'a')
+                of.write("%s,\t"%(timezone.now()))
+                of.write("%s,\t"%(self.name))
+                of.write("%s,\t"%(booking_timeslot))
+                of.write("%s,\n"%(email))
+                of.close() 
         else:
             print("the timeslot instance is not of the right type")
 

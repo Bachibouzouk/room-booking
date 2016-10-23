@@ -9,7 +9,9 @@ need to find an available room for the time at which the user requests
 
 need to find a room depending on crossed field (room size, timeslots, etc...)
 
+#done
 need to create a log file of all booking made
 
 need to be able to update the periods where the rooms are hard booked
 
+need to merge bookings if a user book a timeslot which is in the neighbouring of a previous booking
