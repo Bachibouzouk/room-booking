@@ -157,10 +157,7 @@ def confirmbookingview(request, room_name):
                     # add the bookings to the room
                     #TODO : make sure the booking wasn't already performed
                     for booking_timeslot in booking_timeslots:
-                        room.booking_set.create(
-                                date_start=booking_timeslot.date_start,
-                                date_stop=booking_timeslot.date_stop,
-                                email=email)
+                        room.make_soft_booking(booking_timeslot,email)
                 elif decision == "cancelled":
                     #do nothing
                     pass

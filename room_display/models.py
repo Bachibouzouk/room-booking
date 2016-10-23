@@ -106,6 +106,24 @@ class Classroom(models.Model):
                   """ % (type(date).__name__, TimeSlot.__name__)
             print(msg)
             raise TypeError(msg)
+    
+    def make_soft_booking(self, booking_timeslot, email):
+        """
+        this method recieve a timeslot and an email and creates a booking if it
+        doesn't clash with an existing one
+        """
+        
+        if isinstance(booking_timeslot, TimeSlot):
+            #TODO : check that the email is valid (call a function from another
+            #package)
+            #check that the room isn't already booked
+            if not self.is_booked(booking_timeslot):
+                self.booking_set.create(
+                                    date_start=booking_timeslot.date_start,
+                                    date_stop=booking_timeslot.date_stop,
+                                    email=email)
+        else:
+            print("the timeslot instance is not of the right type")
 
 
 class Booking(models.Model):
