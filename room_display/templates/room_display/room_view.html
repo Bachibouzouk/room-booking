@@ -1,5 +1,7 @@
 <h1>{{ room.name }}</h1>
 
+<p>Select the times you would like to book the room and enter your email address below (the email address is used to notify you if changes occur in the booking availabilities)</p>
+
 
 {% if booking_list %}
 Existing bookings
@@ -13,7 +15,7 @@ Existing bookings
 {% endif %}
 {% comment %}
 {% endcomment %}
-<form action="{% url 'room_display:room_view' room.name %}" method="post">
+<form action="{% url 'room_display:confirm_booking_view' room.name %}" method="post">
 	{% csrf_token %}
 <table align="center" border=1 cellpadding=2>
 
@@ -44,7 +46,7 @@ Existing bookings
 {%endif%}
 
 {%if t.1 == False%}
-  <td> <input type="checkbox" name="Book" value="{{ t.0 }}"> Book  </td>
+  <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Book  </td>
 {%endif%}
 
 {%endfor%}
@@ -56,20 +58,20 @@ Existing bookings
 
 
 
-  Email addess : <input type="email" name="Email"></br>
+  Email addess : <input type="email" name="email"></br>
   <input type="submit" value="Book">
 </form> 
 
 <p>
-<li><a href="{% url 'room_display:index' %}">Back to index</a></li>
+<a href="{% url 'room_display:index' %}">Back to index</a>
 </p>
 
-{% comment %}
+
 <form action="{% url 'room_display:room_view' room.name %}" method="post">
 	{% csrf_token %}
 <input type="hidden" name="clear bookings" value="Clear">
 <input type="submit" value="Clear bookings">
 </form> 
-
+{% comment %}
 {% endcomment %}
 

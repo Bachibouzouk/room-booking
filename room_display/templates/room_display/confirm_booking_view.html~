@@ -1,0 +1,45 @@
+<h1>Booking {{ room.name }}</h1>
+
+<p>Select the times you would like to book the room and enter your email address below (the email address is used to notify you if changes occur in the booking availabilities)</p>
+
+
+{% if booking_timeslots %}
+<p>
+ <form action="{% url 'room_display:confirm_booking_view' room.name %}" method="post">
+	{% csrf_token %}
+Requested bookings :
+    <ul>
+    {% for booking in booking_timeslots %}
+        <li><input type="hidden" name="booking_slot" value="{{booking}}">{{booking}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No bookings are made currently.</p>
+{% endif %}
+
+{% if email %}
+Email of the person booking :
+    <p><input type="email" name="Email" value = "{{email}}"></p>
+{% else %}
+    <p>No email.</p>
+{% endif %}
+
+
+  <input type="hidden" name="booking_decision" value="confirmed"> 
+  <input type="submit" value="Confirm Booking">
+</form> 
+</p>
+
+<p>
+ <form action="{% url 'room_display:confirm_booking_view' room.name %}" method="post">
+	{% csrf_token %}
+  <input type="hidden" name="booking_decision" value="cancelled"> 
+  <input type="submit" value="Cancel Booking">
+</form> 
+</p>
+
+
+
+<p>
+<a href="{% url 'room_display:index' %}">Back to index</a>
+</p>
