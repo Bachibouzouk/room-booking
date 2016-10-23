@@ -85,6 +85,9 @@ def roomview(request, room_name, counter_day=None, counter_time=None, time=None)
 
     except Classroom.DoesNotExist:
         raise Http404("Room does not exist :" + str(room_name))
+        
+        
+        
     return render(request, 'room_display/room_view.html',
                   {'room': room, 'booking_list': booking_list, 'dates': dates,
                    'weekdays': weekdays, "timeslots": timeslots,
@@ -116,7 +119,7 @@ def confirmbookingview(request, room_name):
         #the way to get to this page is only through the POST method
         if request.method == 'POST':
             query_dict = dict(request.POST)
-            print("Confrim Booking View")
+            print("Confirm Booking View")
             print(request)
             print(query_dict)
             print("")
@@ -129,10 +132,15 @@ def confirmbookingview(request, room_name):
                 requested_bookings = request.POST.getlist("booking_slot")
                 # append the timeslots together if they are concomittent
                 booking_timeslots = append_timeslot(requested_bookings)
-
+            
+            else:
+                #if the booking timeslots are not present we return to the page
+                return redirect("http://%s/room_display/%s"%(request.META["HTTP_HOST"],room.name))
         
             if "email" in query_dict.keys():
                 email = request.POST["email"]
+            else:
+                email = ""
                   
             if "booking_decision" in query_dict.keys():
                 #This key is present only if the user pressed on one of the
