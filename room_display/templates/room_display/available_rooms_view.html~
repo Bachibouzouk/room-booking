@@ -1,6 +1,6 @@
 {%load static%}
 
-Available Rooms
+<h>Look for a room</h>
 <p>
 Search by capacity
  <form action="{% url 'room_display:available_rooms' %}" method="post">
@@ -15,6 +15,7 @@ Search by date
 <form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
 {{timecheck}}
+
   <input type="submit" value="Search">
 </form> 
 </p>
@@ -25,12 +26,30 @@ The capacity is not good</br>
 
 {% endif %}
 
-
-
+{% if time_slot %}
+<p>
+Rooms available for the selected time slot </br>
+{{time_slot}}
+</p>
+{% elif capacity != "ValueError" and capacity %}
+<p>
+Rooms with a capacity of at least {{capacity}} seats
+</p>
+{% else %}
+There is currently no filter applied
+{% endif %}
 {% if room_list %}
     <ul>
     {% for room in room_list %}
-        <li><a href="{% url 'room_display:room_view' room.name %}">{{ room.name }}</a></li>
+        <li>
+		<a href="{% url 'room_display:room_view' room.name %}">
+			{{ room.name }}<form action="{% url 'room_display:confirm_booking_view' room.name %}" method="post">
+				{% csrf_token %}
+				<input type = "hidden" name = "booking_slot" value = "{{time_slot}}">
+  				<input type="submit" value="Book it">
+			</form> 
+		</a>
+	</li>
     {% endfor %}
     </ul>
 {% else %}
@@ -38,6 +57,7 @@ The capacity is not good</br>
 {% endif %}
 
 <p>
+<li><a href="{% url 'room_display:available_rooms' %}">Reset the filters</a></li>
 <li><a href="{% url 'room_display:index' %}">Back to index</a></li>
 </p>
 

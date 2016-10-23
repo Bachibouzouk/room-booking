@@ -3,8 +3,7 @@ from django import forms
 from random import randint
 from django.utils import timezone
 
-from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES #MINUTE_CHOICES
-
+from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, HOUR_CHOICES, HOUR_STOP_CHOICES #MINUTE_CHOICES
 LOG_FILE_NAME = "soft_bookings.log"
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
@@ -17,7 +16,9 @@ def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc)
 class SelectDateTime(forms.Form):
     date = forms.ChoiceField(choices = DATE_CHOICES)#forms.DateField(widget = forms.SelectDateWidget(years=("2016","2017")))
 #    delivery_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
-    hour = forms.ChoiceField(choices = HOUR_CHOICES)
+    hourstart = forms.ChoiceField(choices = HOUR_CHOICES)
+    
+    hourstop = forms.ChoiceField(choices = HOUR_STOP_CHOICES)    
     
     idn = forms.HiddenInput()
     

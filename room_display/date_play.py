@@ -34,15 +34,17 @@ weekday_names = ["Monday", "Tuesday", "Wednesday",
 booking_step = 0.5  # unit hour
 
 #timeslots = range(7, 22, booking_step)
-
-timeslots = np.arange(7., 22., booking_step)
+HOUR_MIN = 7.
+HOUR_MAX = 22.
+timeslots = np.arange(HOUR_MIN, HOUR_MAX, booking_step)
+duration = np.arange(HOUR_MIN, HOUR_MAX, booking_step)#np.arange(booking_step,(HOUR_MAX-HOUR_MIN)+booking_step,booking_step)
 
 if isinstance(booking_step, float):
     timeslots_display = ["%02dh%02d"%(int(h),int((h-int(h))*60)) for h in timeslots]
-    
+    duration_display = ["%02dh%02d"%(int(h),int((h-int(h))*60)) for h in duration]
 elif isinstance(booking_step, int):
     timeslots_display = ["%02dh"%(h) for h in timeslots]
-    
+    duration_display  = ["%02dh"%(h) for h in duration]
 else:
     raise(TypeError,"booking_step variable is not the expected int or float type")
     
@@ -52,6 +54,7 @@ dates_display = [d.strftime("%A %B %d") for d in dates]
 
 DATE_CHOICES = zip(dates, dates_display)
 HOUR_CHOICES = zip(timeslots, timeslots_display)
+HOUR_STOP_CHOICES = zip(timeslots, timeslots_display)#zip(duration,duration_display)
 
 #
 #if not minuteslots == None:

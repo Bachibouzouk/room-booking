@@ -6,7 +6,7 @@ import datetime
 
 from room_display.models import Classroom, Booking, random_date
 
-from room_display.date_play import TimeSlot,get_next_seven_days
+from room_display.date_play import TimeSlot,get_next_seven_days, duration, duration_display
 
 class Command(BaseCommand):
 
@@ -16,6 +16,8 @@ class Command(BaseCommand):
    
         ts=TimeSlot("2016-10-25 from 08:00 to 09:30",datestr=True)
         cr = Classroom.objects.all()
+        print(duration)
+        print(duration_display)
         good_cr =[]
         for c in cr:
             print(c.is_booked(ts))

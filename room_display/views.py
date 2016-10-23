@@ -190,31 +190,43 @@ def confirmbookingview(request, room_name):
             "this page should not be displayed on its own (it needs to be accessed through the 'book' button)")
     except Classroom.DoesNotExist:
         raise Http404("Room does not exist :" + str(room_name))
-        
+
+
 def availableroomsview(request):
     """the capacity value should be tested to be positive integer"""
     room_list = None
     capacity = None
-    timecheck=SelectDateTime()
+    timecheck = SelectDateTime()
+    requested_datetime = None
+    
     try:
         if request.method == 'POST':
             query_dict = dict(request.POST)
             print(query_dict)
-            if "capacity" in query_dict.keys():
+            
+            #get the full list of the rooms
+            room_list = Classroom.objects.all()    
+            
+            if 'capacity' in query_dict.keys():
+                #the user wanted to filter by capacity
+                
                 capacity = request.POST['capacity']
-                room_list = Classroom.objects.filter(
+                
+                room_list = room_list.filter(
                     number_seats__gte=capacity)
                     
-            if "hour" and "date" in query_dict.keys():
-                hour = float(request.POST['hour'])
+            if 'hourstart' and 'hourstop' and 'date' in query_dict.keys():
+                hourstart = float(request.POST['hourstart'])
+                hourstop = float(request.POST['hourstop'])
                 date = timezone.datetime.strptime(request.POST['date'],"%Y-%m-%d")
                 
 #                if "duration" in query_dict.keys():
 #                    duration = float ()
-                
-                requested_datetime = TimeSlot(date, hour)
+#                import ipdb;ipdb.set_trace()
+                requested_datetime = TimeSlot(date, hourstart, 
+                                              duration = hourstop - hourstart)
 #                print(requested_datetime)
-                cr = Classroom.objects.all()
+                cr = room_list
                 good_cr =[]
                 for c in cr:
                     if c.is_booked(requested_datetime):
@@ -223,6 +235,10 @@ def availableroomsview(request):
                         good_cr.append(c)
                 room_list = good_cr
 #                print(room_list)
+
+        elif request.method == 'GET':
+            #get the full list of the rooms
+            room_list = Classroom.objects.all()
 
             """
             here I should find a quick way to to make a datetime object with
@@ -254,4 +270,8 @@ def availableroomsview(request):
 #            capacity = "None"
 #    calendar = Calendar()
     
-    return render(request, 'room_display/available_rooms_view.html', {"room_list": room_list, "capacity": capacity, "step_time": booking_step,"timecheck":timecheck})
+    return render(request, 'room_display/available_rooms_view.html', 
+                          {"room_list": room_list, 
+                          "capacity": capacity, 
+                          "time_slot": requested_datetime,
+                          "timecheck": timecheck})
