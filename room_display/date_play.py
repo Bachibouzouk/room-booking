@@ -37,7 +37,7 @@ booking_step = 0.5  # unit hour
 HOUR_MIN = 7.
 HOUR_MAX = 22.
 timeslots = np.arange(HOUR_MIN, HOUR_MAX, booking_step)
-duration = np.arange(HOUR_MIN, HOUR_MAX, booking_step)#np.arange(booking_step,(HOUR_MAX-HOUR_MIN)+booking_step,booking_step)
+duration = np.arange(HOUR_MIN + booking_step, HOUR_MAX + booking_step, booking_step)#np.arange(booking_step,(HOUR_MAX-HOUR_MIN)+booking_step,booking_step)
 
 if isinstance(booking_step, float):
     timeslots_display = ["%02dh%02d"%(int(h),int((h-int(h))*60)) for h in timeslots]
@@ -54,7 +54,7 @@ dates_display = [d.strftime("%A %B %d") for d in dates]
 
 DATE_CHOICES = zip(dates, dates_display)
 HOUR_CHOICES = zip(timeslots, timeslots_display)
-HOUR_STOP_CHOICES = zip(timeslots, timeslots_display)#zip(duration,duration_display)
+HOUR_STOP_CHOICES = zip(duration,duration_display)
 
 #
 #if not minuteslots == None:

@@ -5,8 +5,10 @@ need to be able to find all the booking made by one user
 
 need to be able to "hard book" any room and it should send a email to all users who had soft reservations
 
+#done
 need to find an available room for the time at which the user requests
 
+#done for capacity and date
 need to find a room depending on crossed field (room size, timeslots, etc...)
 
 #done

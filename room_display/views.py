@@ -211,53 +211,44 @@ def availableroomsview(request):
                 #the user wanted to filter by capacity
                 
                 capacity = request.POST['capacity']
-                
-                room_list = room_list.filter(
-                    number_seats__gte=capacity)
+                if capacity == "":
+                    capacity = None
+                else:
+                    room_list = room_list.filter(number_seats__gte=capacity)
                     
-            if 'hourstart' and 'hourstop' and 'date' in query_dict.keys():
-                hourstart = float(request.POST['hourstart'])
-                hourstop = float(request.POST['hourstop'])
+            if 'timestart' and 'timestop' and 'date' in query_dict.keys():
+                hourstart = float(request.POST['timestart'])
+                hourstop = float(request.POST['timestop'])
                 date = timezone.datetime.strptime(request.POST['date'],"%Y-%m-%d")
                 
 #                if "duration" in query_dict.keys():
 #                    duration = float ()
 #                import ipdb;ipdb.set_trace()
-                requested_datetime = TimeSlot(date, hourstart, 
-                                              duration = hourstop - hourstart)
-#                print(requested_datetime)
-                cr = room_list
-                good_cr =[]
-                for c in cr:
-                    if c.is_booked(requested_datetime):
-                        pass
-                    else:
-                        good_cr.append(c)
-                room_list = good_cr
+                try :
+                    requested_datetime = TimeSlot(date, hourstart, 
+                                                  duration = hourstop - hourstart)
+    #                print(requested_datetime)
+                    cr = room_list
+                    good_cr =[]
+                    for c in cr:
+                        if c.is_booked(requested_datetime):
+                            pass
+                        else:
+                            good_cr.append(c)
+                    room_list = good_cr
+                except ValueError:
+                    requested_datetime = "inconsistent"
+                    print("Fuck you value error, fuck you")
 #                print(room_list)
 
         elif request.method == 'GET':
             #get the full list of the rooms
             room_list = Classroom.objects.all()
 
-            """
-            here I should find a quick way to to make a datetime object with
-            {'day': ['1'], 'hour': ['10'], 'min': ['00'], 'duration': ['1'], 'year': ['2016'], 'month': ['5']}
-           
-           
-           then I would look throught the DB for all rooms that aren't booked
-            at this time using the is_booked method
-            
-            OR
-            
-            I can see which are the bookings which are within the time period
-            and then find the list of the room available with the total list minus
-            the booked rooms
-            """
 
     except Classroom.DoesNotExist:
         raise Http404(
-            "There is no room with number of seats greater than :" + str(capacity))
+            "The classroom you are looking for doesn't exist")
             
 #    except ValueError or KeyError:
 #        capacity = "ValueError"

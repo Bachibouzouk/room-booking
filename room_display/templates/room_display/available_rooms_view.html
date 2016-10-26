@@ -1,22 +1,27 @@
 {%load static%}
 
-<h>Look for a room</h>
+<h1>Look for a room</h1>
 <p>
 Search by capacity
  <form action="{% url 'room_display:available_rooms' %}" method="post">
 	{% csrf_token %}
-  Capacity: <input type="text" name="capacity">
-  <input type="submit" value="Search">
-</form> 
-</p>
+  Capacity: {% if capacity != "ValueError" and capacity %}
+	<input type="text" name= "capacity" value = "{{capacity}}">
+	{% else %}
+	<input type="text" name= "capacity">
+	{% endif %}
 
-<p>
-Search by date
-<form action="{% url 'room_display:available_rooms' %}" method="post">
-	{% csrf_token %}
+	</br></br>
+
+Search by date </br></br>
+{% if time_slot == "inconsistent" %}
+The start time cannot be later than the end time!</br></br>
+	{% endif %}
 {{timecheck}}
 
+	</br></br>
   <input type="submit" value="Search">
+
 </form> 
 </p>
 
@@ -25,19 +30,30 @@ Search by date
 The capacity is not good</br>
 
 {% endif %}
+<p>
 
 {% if time_slot %}
-<p>
-Rooms available for the selected time slot </br>
-{{time_slot}}
+
+ Rooms available for the selected time slot </br>
+{{time_slot}} </br>
+{% if capacity != "ValueError" and capacity %}
+and with a capacity of at least {{capacity}} seats
 </p>
-{% elif capacity != "ValueError" and capacity %}
-<p>
+{% endif %}
+
+{% else %}
+
+{% if capacity != "ValueError" and capacity %}
 Rooms with a capacity of at least {{capacity}} seats
 </p>
 {% else %}
-There is currently no filter applied
+No rooms available for these search criterions
+</p>
 {% endif %}
+{% endif %}
+
+
+
 {% if room_list %}
     <ul>
     {% for room in room_list %}
