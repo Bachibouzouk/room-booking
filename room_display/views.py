@@ -79,8 +79,7 @@ def roomview(request, room_name, counter_day=None, counter_time=None, time=None)
             elif "clear bookings" in query_dict.keys():
                 """ this should be removed in the published version """
                 room.booking_set.all().delete()
-
-
+                
 
 
     except Classroom.DoesNotExist:
@@ -104,21 +103,6 @@ def userview(request,user_name):
     return render(request, 'room_display/user_view.html', {'user_name': user_name,
                                                            'booking_list': bk})
 
-
-def makebookingview(request):
-    """This view should get a room name and a time (and an email),create a booking and assign it to the room"""
-    if request.method == 'POST':
-        query_dict = dict(request.POST)
-        print(query_dict)
-    # add the bookings to the room
-#    for booking_timeslot in booking_timeslots:
- #       room.booking_set.create(
-  #                      date_start=booking_timeslot.date_start,
-   #                     date_stop=booking_timeslot.date_stop,
-    #                    email=email)
-
-
-    return render(request, 'room_display/make_booking_view.html', {})
 
 def confirmbookingview(request, room_name):
 
@@ -167,8 +151,14 @@ def confirmbookingview(request, room_name):
                 if decision == "confirmed":
                     # add the bookings to the room
                     #TODO : make sure the booking wasn't already performed
-                    for booking_timeslot in booking_timeslots:
-                        room.make_soft_booking(booking_timeslot,email)
+                
+                    #this is just for test purpouses
+                    if "hard_book" in query_dict.keys():
+                        for booking_timeslot in booking_timeslots:
+                            room.make_hard_booking(booking_timeslot)
+                    else:
+                        for booking_timeslot in booking_timeslots:
+                            room.make_soft_booking(booking_timeslot,email)
                 elif decision == "cancelled":
                     #do nothing
                     pass

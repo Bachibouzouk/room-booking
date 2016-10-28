@@ -7,6 +7,13 @@ from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
 LOG_FILE_NAME = "soft_bookings.log"
 
+BOOKING_FREE_TYPE = 0
+
+BOOKING_SOFT_TYPE = 1
+
+BOOKING_HARD_TYPE = 2
+
+
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
 
     return start + timezone.timedelta(
@@ -131,21 +138,62 @@ class Classroom(models.Model):
                 self.booking_set.create(
                                     date_start=booking_timeslot.date_start,
                                     date_stop=booking_timeslot.date_stop,
-                                    email=email)
+                                    email=email,booking_type = BOOKING_SOFT_TYPE)
                 
                 #keep a record of the soft booking made
                 of = open(LOG_FILE_NAME,'a')
                 of.write("%s,\t"%(timezone.now()))
                 of.write("%s,\t"%(self.name))
                 of.write("%s,\t"%(booking_timeslot))
-                of.write("%s,\n"%(email))
+                of.write("%s,\t"%(email))
+                of.write("SOFT booking,\n")
                 of.close() 
+        else:
+            print("the timeslot instance is not of the right type")
+    
+    def make_hard_booking(self, booking_timeslot):
+        """
+        this method recieve a timeslot and an email and creates a booking if it
+        doesn't clash with an existing one
+        """
+        
+        if isinstance(booking_timeslot, TimeSlot):
+            
+            #check that the room isn't already booked
+       
+        
+            if self.is_booked(booking_timeslot):
+                #TODO : send an email to tell the persons that their room
+                #isn't available anymore and delete their bookings
+                print("The room is soft booked")
+                conflicts = self.booking_set.filter(
+                date_start__lt = booking_timeslot.date_stop, 
+                date_stop__gt = booking_timeslot.date_start,
+                booking_type = BOOKING_SOFT_TYPE
+                )
+                print(conflicts)
+            
+            
+            
+            self.booking_set.create(
+                                date_start=booking_timeslot.date_start,
+                                date_stop=booking_timeslot.date_stop,
+                                booking_type = BOOKING_HARD_TYPE)
+            
+            #keep a record of the soft booking made
+            of = open(LOG_FILE_NAME,'a')
+            of.write("%s,\t"%(timezone.now()))
+            of.write("%s,\t"%(self.name))
+            of.write("%s,\t"%(booking_timeslot))
+            of.write("%s,\t"%("BANNER"))
+            of.write("HARD booking,\n")
+            of.close() 
         else:
             print("the timeslot instance is not of the right type")
 
 
 class Booking(models.Model):
-
+    
     classroom = models.ForeignKey(
         Classroom, on_delete=models.CASCADE, null=True)
     date_start = models.DateTimeField(default=timezone.now)
@@ -153,7 +201,7 @@ class Booking(models.Model):
 
     email = models.EmailField(default="abc@mail.mcgill.ca")
 
-    max_booking = 4  # hours
+    booking_type = models.IntegerField(default = BOOKING_SOFT_TYPE)
 
     def __str__(self):
         return "%s to %s by %s" % (

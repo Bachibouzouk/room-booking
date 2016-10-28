@@ -41,6 +41,10 @@ Existing bookings
   <td> {{t.0.hour}} </td>
 {%endif%}
 
+ <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Book  </td>
+
+{% comment %}
+
 {%if t.1 == True%}
   <td>  Booked  </td>
 {%endif%}
@@ -48,7 +52,7 @@ Existing bookings
 {%if t.1 == False%}
   <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Book  </td>
 {%endif%}
-
+{% endcomment %}
 {%endfor%}
 </tr>
 
@@ -59,6 +63,8 @@ Existing bookings
 
 
   Email addess : <input type="email" name="email"></br>
+
+  
   <input type="submit" value="Book">
 </form> 
 
