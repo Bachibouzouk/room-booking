@@ -64,7 +64,7 @@ class ClassRoomMethodTests(TestCase):
         for ts in timeslots:
             self.cr.booking_set.create(date_start = ts.date_start,
                                        date_stop = ts.date_stop,
-                                       email = "soft@test.ca")
+                                       email = "soft.test@mcgill.ca")
         
         self.cr.save()
 
@@ -104,7 +104,7 @@ class ClassRoomMethodTests(TestCase):
         ts=TimeSlot("2016-05-02 from 09:00 to 10:00", datestr = True)        
         num_previous_bookings = len(self.cr.booking_set.all())
         
-        self.cr.make_soft_booking(ts, "soft@test.ca")
+        self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
         num_current_bookings = len(self.cr.booking_set.all())
         
         #the hardbooking should destroy the soft booking existing
@@ -115,7 +115,7 @@ class ClassRoomMethodTests(TestCase):
         ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
         num_previous_bookings = len(self.cr.booking_set.all())
         
-        self.cr.make_soft_booking(ts, "soft@test.ca")
+        self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
         num_current_bookings = len(self.cr.booking_set.all())
 
         self.assertEqual(num_previous_bookings+1,num_current_bookings)

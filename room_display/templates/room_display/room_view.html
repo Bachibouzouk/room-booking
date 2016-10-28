@@ -41,18 +41,14 @@ Existing bookings
   <td> {{t.0.hour}} </td>
 {%endif%}
 
- <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Book  </td>
-
-{% comment %}
-
-{%if t.1 == True%}
-  <td>  Booked  </td>
+{%if t.1 == 1%}
+    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> SB  </td>
+{%elif t.1 == 2%} 
+    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> HB  </td>
+{%elif t.1 == 0%}
+  <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Free  </td>
 {%endif%}
 
-{%if t.1 == False%}
-  <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Book  </td>
-{%endif%}
-{% endcomment %}
 {%endfor%}
 </tr>
 

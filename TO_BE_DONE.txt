@@ -1,19 +1,25 @@
+#done PF
 need to check if the email address is a mcgill one before I can accept the reservation (maybe send a check email)
 
-#done in check_things.py it is fairly easy :)
+#done (PF) in check_things.py it is fairly easy :)
 need to be able to find all the booking made by one user
 
+#done PF
 need to be able to "hard book" any room and it should send a email to all users who had soft reservations
 
-#done
+#done PF
 need to find an available room for the time at which the user requests
 
-#done for capacity and date
+#done PF for capacity and date
 need to find a room depending on crossed field (room size, timeslots, etc...)
 
-#done
+#done PF
 need to create a log file of all booking made
 
-need to be able to update the periods where the rooms are hard booked
+need to be able to update the periods where the rooms are hard booked from a routine (ie reading the file generated from banner with the latest changes)
 
-need to merge bookings if a user book a timeslot which is in the neighbouring of a previous booking
+need to merge bookings if a user book a timeslot which is in the neighbouring of one of its previous booking
+
+if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
+
+if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should

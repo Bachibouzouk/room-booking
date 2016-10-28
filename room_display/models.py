@@ -7,7 +7,7 @@ from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
                         
                         
-from .email_notification import send_email
+from .email_management import send_email, is_from_mcgill
                       
                         
                         
@@ -37,9 +37,16 @@ class SelectDateTime(forms.Form):
     
     idn = forms.HiddenInput()
     
-#    def __init__(self,tstart = "09h00"):
-#        super()
-#        print(self.timestart.initial)
+#    def __init__(self,*args,**kwargs):
+#        print("inside constructor")
+#        print("args")
+#        print(args)
+#        print("kwargs")
+#        print(kwargs)
+#        super(SelectDateTime,self).__init__(*args,**kwargs)
+#        self.base_fields['timestop'].inital = 9.5
+##        import ipdb;ipdb.set_trace()
+##        print(self.timestart.initial)
 
 #        self.initial['timestart'] = tstart
 #    minute = forms.ChoiceField(choices = MINUTE_CHOICES)
@@ -155,32 +162,34 @@ class Classroom(models.Model):
         """
         
         if isinstance(booking_timeslot, TimeSlot):
-            #TODO : check that the email is valid (call a function from another
-            #package)
-            #check that the room isn't already booked
-       
-        
-            if not self.is_booked(booking_timeslot):
-                self.booking_set.create(
-                                    date_start=booking_timeslot.date_start,
-                                    date_stop=booking_timeslot.date_stop,
-                                    email=email,booking_type = BOOKING_SOFT_TYPE)
-                
-                #keep a record of the soft booking made
-                of = open(LOG_FILE_NAME,'a')
-                of.write("%s,\t"%(timezone.now()))
-                of.write("%s,\t"%(self.name))
-                of.write("%s,\t"%(booking_timeslot))
-                of.write("%s,\t"%(email))
-                of.write("SOFT booking,\n")
-                of.close()
-                return 0
-                
+            #check that the email is from McGill 
+            if is_from_mcgill(email):
+                #check that the room isn't already booked
+                if not self.is_booked(booking_timeslot):
+                    self.booking_set.create(
+                                        date_start=booking_timeslot.date_start,
+                                        date_stop=booking_timeslot.date_stop,
+                                        email=email,booking_type = BOOKING_SOFT_TYPE)
+                    
+                    #keep a record of the soft booking made
+                    of = open(LOG_FILE_NAME,'a')
+                    of.write("%s,\t"%(timezone.now()))
+                    of.write("%s,\t"%(self.name))
+                    of.write("%s,\t"%(booking_timeslot))
+                    of.write("%s,\t"%(email))
+                    of.write("SOFT booking,\n")
+                    of.close()
+                    return 0
+                    
+                else:
+                    return 1
+                    
             else:
-                return 1
+                #the email isn't from McGill
+                print("The email %s isn't from McGill, you can't use that service sorry")
+                return 2
         else:
-            print("the timeslot instance is not of the right type")
-            raise TypeError
+            raise TypeError("the timeslot instance is not of the right type")
     
     def make_hard_booking(self, booking_timeslot):
         """
@@ -195,11 +204,7 @@ class Classroom(models.Model):
             proceed_to_booking = True
             
             if cur_booking_type == BOOKING_SOFT_TYPE :
-                #TODO : send an email to tell the persons that their room
-                #isn't available anymore and delete their bookings
-                print("The room is soft booked")
-                
-               
+            
                 soft_booking = self.booking_set.filter(
                 date_start__lt = booking_timeslot.date_stop, 
                 date_stop__gt = booking_timeslot.date_start,
@@ -241,8 +246,7 @@ class Classroom(models.Model):
             else:
                 return 1
         else:
-            print("the timeslot instance is not of the right type")
-            raise TypeError
+            raise TypeError("the timeslot instance is not of the right type")
 
 class Booking(models.Model):
     
@@ -254,6 +258,13 @@ class Booking(models.Model):
     email = models.EmailField(default="abc@mail.mcgill.ca")
 
     booking_type = models.IntegerField(default = BOOKING_SOFT_TYPE)
+
+#    def __init__(self,*args,**kwargs):
+#        if 'email' in kwargs:
+#            print(kwargs['email'])
+#        super(Booking,self).__init__(*args,**kwargs)
+#        
+            
 
     def __str__(self):
         return "%s to %s by %s" % (
