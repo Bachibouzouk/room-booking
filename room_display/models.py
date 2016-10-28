@@ -5,6 +5,12 @@ from django.utils import timezone
 
 from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
+                        
+                        
+from .email_notification import send_email
+                      
+                        
+                        
 LOG_FILE_NAME = "soft_bookings.log"
 
 BOOKING_FREE_TYPE = 0
@@ -13,6 +19,7 @@ BOOKING_SOFT_TYPE = 1
 
 BOOKING_HARD_TYPE = 2
 
+DEBUG = True
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
 
@@ -104,18 +111,37 @@ class Classroom(models.Model):
         if isinstance(date, TimeSlot):
             conflicts = self.booking_set.filter(
                 date_start__lt=date.date_stop, date_stop__gt=date.date_start)
-            if len(conflicts):
-                return True
+                
+            if len(conflicts) == 1:
+#                print(conflicts)
+                return conflicts[0].booking_type
+                
+            elif len(conflicts) > 1:
+#                print(conflicts)
+                msg = "There shouldn't be more than one existing booking"
+                print(msg)
+#                raise IndexError(msg)
+                
             else:
-                return False
+                return BOOKING_FREE_TYPE
+                
         elif isinstance(date, str):
             date_start, date_stop = convert_timeslot_to_date(date)
             conflicts = self.booking_set.filter(
                 date_start__lt=date_stop, date_stop__gt=date_start)
-            if len(conflicts):
-                return True
+                
+            if len(conflicts) == 1:
+#                print(conflicts)
+                return conflicts[0].booking_type
+                
+            elif len(conflicts) > 1:
+#                print(conflicts)
+                msg = "There shouldn't be more than one existing booking"
+                print(msg)
+#                raise IndexError(msg)
+                
             else:
-                return False
+                return BOOKING_FREE_TYPE
         else:
             msg = """The method cannot take a %s type as an argument, the accepted types are %s and string
                   """ % (type(date).__name__, TimeSlot.__name__)
@@ -147,9 +173,14 @@ class Classroom(models.Model):
                 of.write("%s,\t"%(booking_timeslot))
                 of.write("%s,\t"%(email))
                 of.write("SOFT booking,\n")
-                of.close() 
+                of.close()
+                return 0
+                
+            else:
+                return 1
         else:
             print("the timeslot instance is not of the right type")
+            raise TypeError
     
     def make_hard_booking(self, booking_timeslot):
         """
@@ -160,37 +191,58 @@ class Classroom(models.Model):
         if isinstance(booking_timeslot, TimeSlot):
             
             #check that the room isn't already booked
-       
-        
-            if self.is_booked(booking_timeslot):
+            cur_booking_type = self.is_booked(booking_timeslot)
+            proceed_to_booking = True
+            
+            if cur_booking_type == BOOKING_SOFT_TYPE :
                 #TODO : send an email to tell the persons that their room
                 #isn't available anymore and delete their bookings
                 print("The room is soft booked")
-                conflicts = self.booking_set.filter(
+                
+               
+                soft_booking = self.booking_set.filter(
                 date_start__lt = booking_timeslot.date_stop, 
                 date_stop__gt = booking_timeslot.date_start,
-                booking_type = BOOKING_SOFT_TYPE
-                )
-                print(conflicts)
+                booking_type = cur_booking_type)[0]
+                
+                #send an email to tell the persons that their room
+                #isn't available anymore
+                if DEBUG:
+                    #this is to avoid spamming people while testing the feature
+                    print("dummy email to %s"%(soft_booking.email))
+                else:
+                    pw = raw_input("PW: ")
+                    user = raw_input("user: ")
+                    send_email(pw,soft_booking.email,"You have been hard booked","Sorry",user) 
+                    
+                #procede to the deletion of the soft booking
+                soft_booking.delete()
+                
+            elif cur_booking_type == BOOKING_HARD_TYPE:
+                proceed_to_booking = False
             
-            
-            
-            self.booking_set.create(
-                                date_start=booking_timeslot.date_start,
-                                date_stop=booking_timeslot.date_stop,
-                                booking_type = BOOKING_HARD_TYPE)
-            
-            #keep a record of the soft booking made
-            of = open(LOG_FILE_NAME,'a')
-            of.write("%s,\t"%(timezone.now()))
-            of.write("%s,\t"%(self.name))
-            of.write("%s,\t"%(booking_timeslot))
-            of.write("%s,\t"%("BANNER"))
-            of.write("HARD booking,\n")
-            of.close() 
+            if proceed_to_booking:
+                #the room isn't already hard booked
+                self.booking_set.create(
+                                    date_start=booking_timeslot.date_start,
+                                    date_stop=booking_timeslot.date_stop,
+                                    booking_type = BOOKING_HARD_TYPE)
+                
+                #keep a record of the hard booking made
+                of = open(LOG_FILE_NAME,'a')
+                of.write("%s,\t"%(timezone.now()))
+                of.write("%s,\t"%(self.name))
+                of.write("%s,\t"%(booking_timeslot))
+                of.write("%s,\t"%("BANNER"))
+                of.write("HARD booking,\n")
+                of.close() 
+                return 0
+                
+            else:
+                return 1
         else:
             print("the timeslot instance is not of the right type")
-
+            raise TypeError
 
 class Booking(models.Model):
     

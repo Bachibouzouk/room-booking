@@ -2,7 +2,8 @@ from django.test import TestCase
 
 from django.utils import timezone
 
-from .models import Classroom
+from .models import Classroom, BOOKING_FREE_TYPE, \
+                    BOOKING_SOFT_TYPE, BOOKING_HARD_TYPE
 
 from .date_play import TimeSlot
 
@@ -63,7 +64,7 @@ class ClassRoomMethodTests(TestCase):
         for ts in timeslots:
             self.cr.booking_set.create(date_start = ts.date_start,
                                        date_stop = ts.date_stop,
-                                       email = "test@test.ca")
+                                       email = "soft@test.ca")
         
         self.cr.save()
 
@@ -98,14 +99,15 @@ class ClassRoomMethodTests(TestCase):
         
         self.assertEqual(self.cr.is_booked(ts), False)
         
-    def test_make_soft_booking_booking_timeslot_already_exists(self):
+    def test_make_soft_booking_soft_booking_timeslot_already_exists(self):
         
         ts=TimeSlot("2016-05-02 from 09:00 to 10:00", datestr = True)        
         num_previous_bookings = len(self.cr.booking_set.all())
         
-        self.cr.make_soft_booking(ts, "test@test.ca")
+        self.cr.make_soft_booking(ts, "soft@test.ca")
         num_current_bookings = len(self.cr.booking_set.all())
         
+        #the hardbooking should destroy the soft booking existing
         self.assertEqual(num_previous_bookings,num_current_bookings)        
         
     def test_make_soft_booking_booking_timeslot_is_free(self):
@@ -113,7 +115,46 @@ class ClassRoomMethodTests(TestCase):
         ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
         num_previous_bookings = len(self.cr.booking_set.all())
         
-        self.cr.make_soft_booking(ts, "test@test.ca")
+        self.cr.make_soft_booking(ts, "soft@test.ca")
         num_current_bookings = len(self.cr.booking_set.all())
 
-        self.assertEqual(num_previous_bookings+1,num_current_bookings)   
+        self.assertEqual(num_previous_bookings+1,num_current_bookings)
+        
+    def test_make_hard_booking_soft_booking_timeslot_already_exists(self):
+        
+        ts=TimeSlot("2016-05-02 from 09:00 to 10:00", datestr = True)        
+        num_previous_bookings = len(self.cr.booking_set.all())
+        num_previous_soft_bookings = len(self.cr.booking_set.filter(
+                                        booking_type = BOOKING_SOFT_TYPE))        
+        
+        num_previous_hard_bookings = len(self.cr.booking_set.filter(
+                                        booking_type = BOOKING_HARD_TYPE))        
+        
+        self.cr.make_hard_booking(ts)
+        
+        num_current_bookings = len(self.cr.booking_set.all())
+        num_current_soft_bookings = len(self.cr.booking_set.filter(
+                                        booking_type = BOOKING_SOFT_TYPE))        
+        
+        num_current_hard_bookings = len(self.cr.booking_set.filter(
+                                        booking_type = BOOKING_HARD_TYPE))
+        
+        #the hardbooking should destroy the soft booking existing
+        self.assertEqual(num_previous_bookings,num_current_bookings) 
+        
+        self.assertEqual(num_previous_soft_bookings - 1,
+                         num_current_soft_bookings)  
+        
+        self.assertEqual(num_previous_hard_bookings + 1,
+                         num_current_hard_bookings) 
+
+        
+    def test_make_hard_booking_booking_timeslot_is_free(self):
+        
+        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
+        num_previous_bookings = len(self.cr.booking_set.all())
+        
+        self.cr.make_hard_booking(ts)
+        num_current_bookings = len(self.cr.booking_set.all())
+
+        self.assertEqual(num_previous_bookings+1,num_current_bookings)
