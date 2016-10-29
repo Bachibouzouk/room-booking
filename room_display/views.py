@@ -79,7 +79,6 @@ def roomview(request, room_name, counter_day=None, counter_time=None, time=None)
             elif "clear bookings" in query_dict.keys():
                 """ this should be removed in the published version """
                 room.booking_set.all().delete()
-                
 
 
     except Classroom.DoesNotExist:
@@ -102,6 +101,11 @@ def userview(request,user_name):
     print(bk)
     return render(request, 'room_display/user_view.html', {'user_name': user_name,
                                                            'booking_list': bk})
+
+def modify_booking_view(request, key):
+
+    print(key)
+    return render(request, 'room_display/modify_booking.html', locals())
 
 
 def confirmbookingview(request, room_name):

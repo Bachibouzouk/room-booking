@@ -23,3 +23,15 @@ need to merge bookings if a user book a timeslot which is in the neighbouring of
 if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
 
 if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should
+
+A user should be able to cancel their booking (send and email with a link they need to click)
+http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
+
+
+need to be able to tell the constructor of the SelectDateTime class which default values the combo boxes for the time and date should take
+
+need to flush the bookings that are older than the current time
+
+need to make the booking of past time impossible (not so important)
+
+need to make the display of the room with their capacity and location in the room_display section (we might want to discuss that)

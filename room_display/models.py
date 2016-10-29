@@ -8,7 +8,7 @@ from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         
                         
 from .email_management import send_email, is_from_mcgill
-                      
+import random
                         
                         
 LOG_FILE_NAME = "soft_bookings.log"
@@ -248,6 +248,9 @@ class Classroom(models.Model):
         else:
             raise TypeError("the timeslot instance is not of the right type")
 
+
+import hashlib
+
 class Booking(models.Model):
     
     classroom = models.ForeignKey(
@@ -288,6 +291,21 @@ class Booking(models.Model):
         this function should send an email to the person who made the booking to to tell them it has been cancelled
         it should then delete the booking                
         """
+        
+        #I need to work out the encrypting of the email of the person or the booking reference 
+        #(I should generate a booking unique key with the email and timeslot)
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:5]
+
+        useremail = self.email
+#        if isinstance(useremail, unicode):
+#        useremail = useremail.encode('utf8')
+        act_key= "23jsjsnb652jss394h5h595n0"#hashlib.sha1(salt+useremail).hexdigest()
+        
+        link=u"http://127.0.0.1:8000/activate/%s"%(act_key)
+        send_email(pw,useremail,"activation",link,"pfduc87")     
+        
+        
+
 
 
 class RandomUser(models.Model):
