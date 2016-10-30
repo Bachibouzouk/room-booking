@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
-
+from django.http import HttpResponseRedirect
 #from room_display import views
 
 urlpatterns = [
+	url(r'^$', lambda r: HttpResponseRedirect('room_display/')),
     url(r'^room_display/', include('room_display.urls')),
     url(r'^admin/', admin.site.urls),
 ]
