@@ -159,12 +159,18 @@ class ClassRoomMethodTests(TestCase):
 
         self.assertEqual(num_previous_bookings+1,num_current_bookings)
         
-    def test_modify_booking(self):
-        
-        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
-#        num_previous_bookings = len(self.cr.booking_set.all())
-        
-        self.cr.make_soft_booking(ts,"pierre-francois.duc@mail.mcgill.ca")
-        booking = self.cr.booking_set.filter(email = "pierre-francois.duc@mail.mcgill.ca")
-        print(booking)
-        booking[0].cancel()
+#    def test_modify_booking(self):
+#        
+#        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
+##        num_previous_bookings = len(self.cr.booking_set.all())
+#        
+#        self.cr.make_soft_booking(ts,"pierre-francois.duc@mail.mcgill.ca")
+#        
+#        ts=TimeSlot("2016-05-02 from 19:00 to 21:00", datestr = True)        
+##        num_previous_bookings = len(self.cr.booking_set.all())
+#        
+#        self.cr.make_soft_booking(ts,"pierre-francois.duc@mail.mcgill.ca")        
+#        
+#        booking = self.cr.booking_set.filter(email = "pierre-francois.duc@mail.mcgill.ca")
+#        print(booking)
+#        booking[0].cancel()

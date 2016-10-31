@@ -6,6 +6,10 @@ Created on Thu Oct 27 22:32:32 2016
 """
 
 import smtplib
+import hashlib
+
+
+
 
 MCGILL_SERVERS =['mail.mcgill.ca','mcgill.ca']
 
@@ -33,6 +37,19 @@ def send_email(pwd, recipient, subject, body, user):
     except:
         print("failed to send mail to %s"%(recipient))
 
+def send_encrypted_link(email, information, title, key, link):
+    
+    act_key = hashlib.sha256(key.encode() + information.encode()).hexdigest()
+    link="%s%s"%(link,act_key)
+    print(link)
+    send_email(pw,email,title,link,user)     
+                    
+def check_encription(hashed_value, value,salt):
+    """returns true if the value and the hashed values are identical after hashing of the value """
+    return hashed_value == hashlib.sha256(salt.encode() + value.encode()).hexdigest()
+                         
+                    
+            
 def is_from_mcgill(email):
     
     #if email is a list of emails

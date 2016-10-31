@@ -8,9 +8,15 @@ from .date_play import get_month_dates, get_next_seven_days, timeslots, TimeSlot
 
 from django.core.urlresolvers import reverse
 
-from .models import Classroom, Booking, Calendar, SelectDateTime
+from .models import Classroom, Booking, Calendar, SelectDateTime, CancelBooking
 
 from django.views import generic
+
+from .email_management import send_encrypted_link,check_encription
+
+import hashlib
+import uuid
+
 """
 using the function render() to do the same thing as loading the template
 
@@ -102,9 +108,48 @@ def userview(request,user_name):
     return render(request, 'room_display/user_view.html', {'user_name': user_name,
                                                            'booking_list': bk})
 
-def modify_booking_view(request, key):
 
-    print(key)
+
+def modify_booking_view(request, hashed_key = None):
+    print(hashed_key)
+
+    if hashed_key == None:
+        if request.method == 'POST':
+            query_dict = dict(request.POST)
+            print(query_dict)
+
+            if "bk_key" in query_dict.keys():
+                bk_key = request.POST["bk_key"]
+                booking = Booking.objects.filter(key = bk_key)
+                if len(booking) > 1:
+                    raise ValueError("Each booking is supposed to be unique")
+                else:
+                    booking=booking[0]
+            
+                       
+                if "send_email" in query_dict.keys():
+                    sha_key = bk_key
+                    send_encrypted_link("pfduc87@gmail.com", booking.email, sha_key, "http://%s/room_display/modify_booking/"%(request.META["HTTP_HOST"]))
+             
+            
+        elif request.method == 'GET':
+            modify_form = CancelBooking()
+    else:
+        all_bookings = Booking.objects.all()
+        booking = None
+        for bk in all_bookings:
+            salt = bk.key
+            
+            information = "%s"%(bk.email)
+            print(salt)
+            print(information)
+            if check_encription(hashed_key,information,salt):
+                print("victory")
+                
+                timeslot = bk.display_timeslot()
+                email = bk.email
+                bk.delete()
+
     return render(request, 'room_display/modify_booking.html', locals())
 
 

@@ -11,6 +11,12 @@ Welcome to the early stage soft booking website
     No rooms are available.
 {% endif %}
 </p>
+
+<p>
+<li><a href="{% url 'room_display:modify_booking_view' %}">modify an existing booking</a></li>
+</p>
+
+
 <p>
 <li><a href="{% url 'room_display:available_rooms' %}">Search available rooms across campus</a></li>
 </p>
