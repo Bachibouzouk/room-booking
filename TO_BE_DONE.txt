@@ -16,17 +16,18 @@ need to find a room depending on crossed field (room size, timeslots, etc...)
 #done PF
 need to create a log file of all booking made
 
+#Almost done
 need to be able to update the periods where the rooms are hard booked from a routine (ie reading the file generated from banner with the latest changes)
 
 need to merge bookings if a user book a timeslot which is in the neighbouring of one of its previous booking
 
-if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
+in case of HB over SB, if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
 
 if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should
 
+#almost done
 A user should be able to cancel their booking (send and email with a link they need to click)
 http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
-
 
 need to be able to tell the constructor of the SelectDateTime class which default values the combo boxes for the time and date should take
 
@@ -35,3 +36,9 @@ need to flush the bookings that are older than the current time
 need to make the booking of past time impossible (not so important)
 
 need to make the display of the room with their capacity and location in the room_display section (we might want to discuss that)
+
+need to convert the timesheet given by the registrar's office into our DB
+
+need to know what to do when two people book the room at the SAME time (and how to simulate that....)
+
+how can we send the emails without using our personal accounts

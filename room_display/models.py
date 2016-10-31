@@ -9,7 +9,7 @@ from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         
 from .email_management import send_email, is_from_mcgill
 import random
-                        
+import uuid     
                         
 LOG_FILE_NAME = "soft_bookings.log"
 
@@ -50,6 +50,11 @@ class SelectDateTime(forms.Form):
 
 #        self.initial['timestart'] = tstart
 #    minute = forms.ChoiceField(choices = MINUTE_CHOICES)
+
+class CancelBooking(forms.Form):
+    
+    email = forms.EmailField(max_length = 200)
+
 
 class Calendar(forms.Form):
 
@@ -262,6 +267,8 @@ class Booking(models.Model):
 
     booking_type = models.IntegerField(default = BOOKING_SOFT_TYPE)
 
+    key = models.CharField(max_length=32, default = uuid.uuid4().hex)
+
 #    def __init__(self,*args,**kwargs):
 #        if 'email' in kwargs:
 #            print(kwargs['email'])
@@ -294,15 +301,16 @@ class Booking(models.Model):
         
         #I need to work out the encrypting of the email of the person or the booking reference 
         #(I should generate a booking unique key with the email and timeslot)
-        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:5]
-
-        useremail = self.email
+#        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:5]
+        information = "%s"%(self.email)
+#        useremail = self.email
+        act_key = hashlib.sha256(self.key.encode() + information.encode()).hexdigest()
 #        if isinstance(useremail, unicode):
 #        useremail = useremail.encode('utf8')
-        act_key= "23jsjsnb652jss394h5h595n0"#hashlib.sha1(salt+useremail).hexdigest()
+#        act_key= "23jsjsnb652jss394h5h595n0"#hashlib.sha1(salt+useremail).hexdigest()
         
         link=u"http://127.0.0.1:8000/activate/%s"%(act_key)
-        send_email(pw,useremail,"activation",link,"pfduc87")     
+#        send_email(pw,recipient,title,link,user)     
         
         
 

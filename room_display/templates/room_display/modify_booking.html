@@ -1,8 +1,49 @@
-<h1>Activation link</h1>
+<h1>Modify/Cancel existing soft booking</h1>
+{% if hashed_key %}
+
 
 <p>
-{{key}}
+{{hashed_key}}
 </p>
+
+{% if timeslot %}
+You have been correctly identified as the person who did the booking </br>
+
+{{timeslot}} by {{email}} will be deleted now, mouahahah
+{% else %}
+The booking related to this link no longer exists
+{% endif %}
+
+{% else %}
+
+{% if modify_form %}
+
+    <p>
+	
+ <form action="{% url 'room_display:modify_booking_view' %}" method="post">
+	{% csrf_token %}
+Please enter the email you used to make the booking : </br>{{modify_form}}
+</br>
+  <input type="submit" value="Send identification email">
+</form> 
+</p>
+{% elif booking %}
+
+Cancel the following booking :</br>
+{{booking.display_timeslot}} by {{booking.email}}
+
+<form action="{% url 'room_display:modify_booking_view' %}" method="post">
+	{% csrf_token %}
+ <input type="hidden" name="bk_key" value={{booking.key}}>
+  <input type="hidden" name="send_email" value="True">
+  <input type="submit" value="Confirm by sending identification email">
+</form> 
+</p>
+
+{% else %}
+An email has been sent to {{email}} with an identification link
+{% endif %}
+{% endif %}
 
 
 
