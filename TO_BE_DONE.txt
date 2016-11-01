@@ -29,6 +29,7 @@ if a (hard) booking is made from a certain hour to another hour which doesn't ma
 A user should be able to cancel their booking (send and email with a link they need to click)
 http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
 
+# done (oulin) - the constructor of SelectDateTime doesn't initialize the values, but the initial values are changed in views.py
 need to be able to tell the constructor of the SelectDateTime class which default values the combo boxes for the time and date should take
 
 need to flush the bookings that are older than the current time

@@ -277,8 +277,14 @@ def availableroomsview(request):
                     room_list = good_cr
                 except ValueError:
                     requested_datetime = "inconsistent"
-                    print("Fuck you value error, fuck you")
-#                print(room_list)
+                    print("Fuck you value error, fuck you") # made me laugh when I read this
+				#print(room_list)
+				
+			# try to make the fields remember what was the inputs last time
+            timecheck.fields['date'].initial = request.POST['date']
+            timecheck.fields['timestart'].initial = hourstart
+            timecheck.fields['timestop'].initial = hourstop
+			
 
         elif request.method == 'GET':
             #get the full list of the rooms
