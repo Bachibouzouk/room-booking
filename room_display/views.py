@@ -121,8 +121,12 @@ def modify_booking_view(request, hashed_key = None):
             if "bk_key" in query_dict.keys():
                 bk_key = request.POST["bk_key"]
                 booking = Booking.objects.filter(key = bk_key)
+                
                 if len(booking) > 1:
+                    print(booking)
                     raise ValueError("Each booking is supposed to be unique")
+                    
+                    # we should check that the user is the same and the bookings are next to each other 
                 else:
                     booking=booking[0]
             

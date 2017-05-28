@@ -25,6 +25,8 @@ in case of HB over SB, if there is a conflict over, say the last 30 min of a boo
 
 if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should
 
+if soft booking is erased by HB, then send a notification email.
+
 #almost done
 A user should be able to cancel their booking (send and email with a link they need to click)
 http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
@@ -43,3 +45,11 @@ need to convert the timesheet given by the registrar's office into our DB
 need to know what to do when two people book the room at the SAME time (and how to simulate that....)
 
 how can we send the emails without using our personal accounts
+
+Make things pretty css
+
+two types of user (special for HB)
+
+If email not the right format (i.e. first.last@mcgill.ca), notify failure
+
+Give option to modify (reduce) a booking time slots

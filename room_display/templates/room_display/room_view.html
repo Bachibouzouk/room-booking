@@ -9,7 +9,7 @@ Existing bookings
     {% for booking in booking_list %}
         <li><form action="{% url 'room_display:modify_booking_view'%}" method="post">
 	{% csrf_token %}
-	{{booking.display_timeslot}} by <a href="{% url 'room_display:user_view' booking.email%}">{{booking.email}}</a> 
+	{{booking.display_timeslot}} by <a href="{% url 'room_display:user_view' booking.email%}">{{booking.email}}</a>, {{booking.key}} 
 	<input type="hidden" name="bk_key" value={{booking.key}}>
 	<input type="submit" value="Modify/Cancel">
 </form> </li>

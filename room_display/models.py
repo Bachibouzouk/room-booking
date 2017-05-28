@@ -171,10 +171,20 @@ class Classroom(models.Model):
             if is_from_mcgill(email):
                 #check that the room isn't already booked
                 if not self.is_booked(booking_timeslot):
+                    # we should check if there's adjacent bookings, if so then merge
+                    print(self.booking_set.filter(email = email))
+                    # filter according to date to check if the time slots are adjacent to an existing one. 
+                    # if return is non-zero then extract time slots of these bookings (either 1 or 2)
+                    # write method in booking class to merge
+                    # write a log
+                    # skip the rest of the code 
                     self.booking_set.create(
-                                        date_start=booking_timeslot.date_start,
-                                        date_stop=booking_timeslot.date_stop,
-                                        email=email,booking_type = BOOKING_SOFT_TYPE)
+                                        date_start = booking_timeslot.date_start,
+                                        date_stop = booking_timeslot.date_stop,
+                                        email = email,
+                                        booking_type = BOOKING_SOFT_TYPE,
+                                        key = uuid.uuid4().hex
+                                        )
                     
                     #keep a record of the soft booking made
                     of = open(LOG_FILE_NAME,'a')
@@ -274,7 +284,8 @@ class Booking(models.Model):
 #            print(kwargs['email'])
 #        super(Booking,self).__init__(*args,**kwargs)
 #        
-            
+
+
 
     def __str__(self):
         return "%s to %s by %s" % (
@@ -312,8 +323,10 @@ class Booking(models.Model):
         link=u"http://127.0.0.1:8000/activate/%s"%(act_key)
 #        send_email(pw,recipient,title,link,user)     
         
-        
-
+    def merge(self, timeSlotList):
+        pass
+        # check if the given timeSlots are indeed adjacent before merging
+        # merge
 
 
 class RandomUser(models.Model):
