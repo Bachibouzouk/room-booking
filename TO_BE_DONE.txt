@@ -41,6 +41,7 @@ need to make the booking of past time impossible (not so important)
 
 need to make the display of the room with their capacity and location in the room_display section (we might want to discuss that)
 
+#On Going PF
 need to convert the timesheet given by the registrar's office into our DB
 
 need to know what to do when two people book the room at the SAME time (and how to simulate that....)
