@@ -16,18 +16,20 @@ need to find a room depending on crossed field (room size, timeslots, etc...)
 #done PF
 need to create a log file of all booking made
 
-#Almost done
+#done PF
 need to be able to update the periods where the rooms are hard booked from a routine (ie reading the file generated from banner with the latest changes)
 
+#on going Oulin
 need to merge bookings if a user book a timeslot which is in the neighbouring of one of its previous booking
 
 in case of HB over SB, if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
 
 if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should
 
+#implemented PF
 if soft booking is erased by HB, then send a notification email.
 
-#almost done
+#implemented PF
 A user should be able to cancel their booking (send and email with a link they need to click)
 http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
 
@@ -39,19 +41,63 @@ need to flush the bookings that are older than the current time
 
 need to make the booking of past time impossible (not so important)
 
+#(in the template when we have the information)
 need to make the display of the room with their capacity and location in the room_display section (we might want to discuss that)
 
-#On going PF
+#On Going PF
 need to convert the timesheet given by the registrar's office into our DB
 
+#maybe not so important or DB takes care of that
 need to know what to do when two people book the room at the SAME time (and how to simulate that....)
 
+#ask mcgill it
 how can we send the emails without using our personal accounts
 
 Make things pretty css
 
+#django tutorial
 two types of user (special for HB)
 
+#go back to view and notify
 If email not the right format (i.e. first.last@mcgill.ca), notify failure
 
+
 Give option to modify (reduce) a booking time slots
+
+#ask the registar
+what is the maximum duration for a booking's timeslot
+
+create a view
+login through link to manage all bookings
+
+write a test for that
+forbid one user to book multiple rooms at same time
+
+not have the tick option for HB for simple users
+
+view and template
+when ticking a box with timeslots adjacent to the same booking, tick everything
+
+###################################
+
+search options:
+
+you can't search if you don't provide at least the date
+
+search by date only and it shows all rooms with their availabilty on that date in a list style like McGill library
+
+search by date and timeslots and it will give you the rooms list that are available
+
+you can filter the later by room capacity as well
+
+you should be able to filter by building
+
+(need to check that with registrar if they have that info in their DB)
+search with features available in the room 
+
+****HB user
+
+search by user (with their email)
+
+
+
