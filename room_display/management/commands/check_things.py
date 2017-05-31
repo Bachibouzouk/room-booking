@@ -8,39 +8,50 @@ from room_display.models import Classroom, Booking, random_date
 
 from room_display.date_play import TimeSlot,get_next_seven_days, duration, duration_display
 
+from room_display.registrar_output_converter import mainf
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # now do the things that you want with your models here
     
-   
-        ts=TimeSlot("2016-10-25 from 08:00 to 09:30",datestr=True)
-        cr = Classroom.objects.all()
-        print(duration)
-        print(duration_display)
-        good_cr =[]
-        for c in cr:
-            print(c.is_booked(ts))
-            if c.is_booked(ts):
-                pass
-            else:
-                good_cr.append(c)
-            """
-            this allows to find all the bookings made per room by one email after a given date
-            """
-            print(c.booking_set.filter(email = "troll@test.caution",date_start__gt=ts.date_start))
+    
+        mainf()
+#        ts=TimeSlot("2017-06-05 from 07:00 to 22:00",datestr=True)
+#        
+#        print(ts.date())        
+#        cr = Classroom.objects.all()
+#        print(duration)
+#        print(duration_display)
+#        good_cr =[]
+#        for c in cr:
+#            print(c.is_booked(ts))
+#            if "Leacock132" in c.name:
+##                c.make_hard_booking(ts)
+#                print(c.booking_set.all())
+##            print(c.is_booked(ts))
+#            if c.is_booked(ts):
+#                pass
+#            else:
+#                good_cr.append(c)
+    
+    
+#            """
+#            this allows to find all the bookings made per room by one email after a given date
+#            """
+#            print(c.booking_set.filter(email = "troll@test.caution",date_start__gt=ts.date_start))
         
         
-        
-        print(good_cr)
-        print("#"*15)
-        
-        
-        """
-        this allows to find all the bookings made by one email after a given date
-        
-        """
-        bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
+#        
+#        print(good_cr)
+#        print("#"*15)
+#        
+#        
+#        """
+#        this allows to find all the bookings made by one email after a given date
+#        
+#        """
+#        bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
 #        print(bk)
 #        'America/Montreal'
 
