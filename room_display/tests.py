@@ -18,6 +18,8 @@ class TimeSlotMethodTests(TestCase):
         self.ts = TimeSlot(
             date = timezone.datetime(2016,3,2,4,0,0,tzinfo=timezone.utc),
             duration=1)
+            
+
     
     def test_create_a_time_slot_from_date_and_duration(self):
         self.assertEqual(self.date,"%s"%(self.ts))
@@ -45,8 +47,6 @@ class TimeSlotMethodTests(TestCase):
         self.assertEqual("%s"%(ts1+ts2), combined_ts_str)
         
         self.assertEqual("%s"%(ts1+self.duration_str), combined_ts_str)
- 
-        
     
 
 class ClassRoomMethodTests(TestCase):
@@ -158,6 +158,29 @@ class ClassRoomMethodTests(TestCase):
         num_current_bookings = len(self.cr.booking_set.all())
 
         self.assertEqual(num_previous_bookings+1,num_current_bookings)
+        
+
+    def test_flush_past_bookings(self):
+        
+        current_ts = TimeSlot(date = timezone.now()+timezone.timedelta(1),
+                              duration=1)
+        
+        past_ts = TimeSlot(date = timezone.now()-timezone.timedelta(1),
+                              duration=1)
+            
+        self.cr.booking_set.create(date_start = current_ts.date_start,
+                                   date_stop = current_ts.date_stop,
+                                   email = "soft.test@mcgill.ca")
+                                   
+        self.cr.booking_set.create(date_start = past_ts.date_start,
+                                   date_stop = past_ts.date_stop,
+                                   email = "soft.test@mcgill.ca")
+        
+        self.cr.flush_past_bookings()        
+        
+        num_current_bookings = len(self.cr.booking_set.all())
+        
+        self.assertEqual(num_current_bookings,1)
         
     def test_adjacent_soft_booking_merge(self):
         # test merging between two consecutive bookings

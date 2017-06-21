@@ -295,6 +295,8 @@ class Classroom(models.Model):
             
             if proceed_to_booking:
                 #the room isn't already hard booked
+            
+                #make a hard booking
                 self.booking_set.create(
                                     date_start=booking_timeslot.date_start,
                                     date_stop=booking_timeslot.date_stop,
@@ -315,6 +317,16 @@ class Classroom(models.Model):
         else:
             raise TypeError("the timeslot instance is not of the right type")
 
+    def flush_past_bookings(self):
+        """this methods erase the bookings
+        which stop at date are earlier than the actual time 
+        """
+        #filter the bookings which happends before the current time
+        past_bookings = self.booking_set.filter(date_stop__lt = timezone.now())
+        
+        #delete the bookings
+        for booking in past_bookings:
+            booking.delete()
 
 import hashlib
 

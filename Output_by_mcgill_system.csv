@@ -1,0 +1,31 @@
+SZRSTUDN(1.2)                                                        Run: 24-AUG-16 00:05,,,,,,,
+PBAN1                            ,,,,,,,
+,,,,,,,
+  Report of Rooms Available for Student Society ( AUS ) with Prior Bookings in the Listed Times ,,,,,,,
+  For Week 22-AUG-2016 to 28-AUG-2016,,,,,,,
+RDEF CODE,Bldg,Room,Days,Times,Start date,End date,BLDG DESC
+VAUS,ARTS,160,      T            ,   17:05  -  19:25,23-AUG-2016,23-AUG-2016,Arts Building
+VAUS,ARTS,160,         W         ,   09:05  -  13:55,24-AUG-2016,24-AUG-2016,Arts Building
+VAUS,ARTS,160,            R      ,   13:05  -  17:55,25-AUG-2016,25-AUG-2016,Arts Building
+VAUS,ARTS,160,               F   ,   14:05  -  14:55,26-AUG-2016,26-AUG-2016,Arts Building
+VAUS,ARTS,230,               F   ,   09:05  -  11:55,26-AUG-2016,26-AUG-2016,Arts Building
+VAUS,ARTS,W-120,            R      ,   08:35  -  17:25,25-AUG-2016,25-AUG-2016,Arts Building
+VAUS,ARTS,W-120,               F   ,   08:35  -  17:25,26-AUG-2016,26-AUG-2016,Arts Building
+VAUS,ARTS,W-215,   M T W R      ,   00:05  -  23:55,15-AUG-2016,26-AUG-2016,Arts Building
+VAUS,ARTS,W-215,               F   ,   00:05  -  23:55,19-AUG-2016,26-AUG-2016,Arts Building
+VAUS,LEA,109,            R      ,   10:05  -  12:55,25-AUG-2016,25-AUG-2016,Leacock Building
+VAUS,LEA,109,               F   ,   10:05  -  16:55,26-AUG-2016,26-AUG-2016,Leacock Building
+VAUS,LEA,109,                  S,   10:05  -  16:55,27-AUG-2016,27-AUG-2016,Leacock Building
+VAUS,LEA,110,            R      ,   08:05  -  16:55,25-AUG-2016,25-AUG-2016,Leacock Building
+VAUS,LEA,132,   M T W R F   ,   00:05  -  23:55,15-AUG-2016,25-AUG-2016,Leacock Building
+VAUS,LEA,132,U             F S,   09:35  -  16:35,26-AUG-2016,28-AUG-2016,Leacock Building
+VAUS,LEA,14,U M T W R F S,   00:05  -  23:55,01-AUG-2016,31-AUG-2016,Leacock Building
+VAUS,LEA,15,U M T W R F S,   00:05  -  23:55,01-AUG-2016,31-AUG-2016,Leacock Building
+VAUS,LEA,219,            R F   ,   09:05  -  16:55,25-AUG-2016,26-AUG-2016,Leacock Building
+VAUS,LEA,219,                  S,   08:35  -  16:55,27-AUG-2016,27-AUG-2016,Leacock Building
+VAUS,LEA,232,         W         ,   08:05  -  11:55,24-AUG-2016,24-AUG-2016,Leacock Building
+VAUS,LEA,232,            R      ,   10:05  -  16:55,25-AUG-2016,25-AUG-2016,Leacock Building
+VAUS,LEA,232,               F S,   09:05  -  16:55,26-AUG-2016,27-AUG-2016,Leacock Building
+VAUS,LEA,26,   M               ,   17:05  -  20:55,22-AUG-2016,22-AUG-2016,Leacock Building
+VAUS,LEA,26,               F   ,   08:05  -  20:55,26-AUG-2016,26-AUG-2016,Leacock Building
+VAUS,LEA,26,                  S,   08:05  -  20:55,27-AUG-2016,27-AUG-2016,Leacock Building
