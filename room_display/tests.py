@@ -160,7 +160,7 @@ class ClassRoomMethodTests(TestCase):
         self.assertEqual(num_previous_bookings+1,num_current_bookings)
         
     def test_adjacent_soft_booking_merge(self):
-        # to add: when new booking is sandwiched between two old ones
+        # test merging between two consecutive bookings
         ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
         ts2=TimeSlot("2016-05-02 from 17:00 to 19:00", datestr = True)        
         num_previous_bookings = len(self.cr.booking_set.all())
@@ -170,6 +170,20 @@ class ClassRoomMethodTests(TestCase):
         num_current_bookings = len(self.cr.booking_set.all())
 
         self.assertEqual(num_previous_bookings + 1,num_current_bookings)
+        
+    def test_adjacent_soft_booking_merge2(self):
+        # test merging for when new booking is sandwiched between two old ones
+        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
+        ts2=TimeSlot("2016-05-02 from 18:00 to 19:00", datestr = True)  
+        ts3=TimeSlot("2016-05-02 from 17:00 to 18:00", datestr = True)
+        num_previous_bookings = len(self.cr.booking_set.all())
+        
+        self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
+        self.cr.make_soft_booking(ts2, "soft.test@mcgill.ca")
+        self.cr.make_soft_booking(ts3, "soft.test@mcgill.ca")
+        num_current_bookings = len(self.cr.booking_set.all())
+
+        self.assertEqual(num_previous_bookings,num_current_bookings)
         
 #    def test_modify_booking(self):
 #        

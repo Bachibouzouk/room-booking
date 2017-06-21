@@ -1,0 +1,10 @@
+(Oulin) I can never what to do so here's a note for myself.
+
+(Start the virtualenv)
+D:\.virtualenvs\room-booking\Scripts\activate.bat
+
+(Go to the room-booking folder)
+cd D:\"My Git"\room-booking\
+
+(Run the project)
+python manage.py runserver

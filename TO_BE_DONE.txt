@@ -50,6 +50,7 @@ Make things pretty css
 
 two types of user (special for HB)
 
-If email not the right format (i.e. first.last@mcgill.ca), notify failure
-
+If email not the right format (i.e. first.last@mcgill.ca), notify failure. Similarly, if email absent, notify failure instead of crashing.
 Give option to modify (reduce) a booking time slots
+
+Past bookings (before current date) needs to be removed
