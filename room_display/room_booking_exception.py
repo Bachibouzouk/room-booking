@@ -6,5 +6,5 @@ Created on Fri Jun 30 18:05:06 2017
 """
 
 class BookingError(Exception):
-   def __init__(self, arg):
-      self.args = arg
+    def __init__(self, message):
+        self.message = message

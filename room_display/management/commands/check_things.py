@@ -16,7 +16,7 @@ class Command(BaseCommand):
         # now do the things that you want with your models here
     
     
-        mainf()
+#        mainf()
 #        ts=TimeSlot("2017-06-05 from 07:00 to 22:00",datestr=True)
 #        
 #        print(ts.date())        
@@ -51,6 +51,17 @@ class Command(BaseCommand):
 #        this allows to find all the bookings made by one email after a given date
 #        
 #        """
+        a_user = "soft.test@mcgill.ca"        
+        ts = TimeSlot("2018-06-05 from 07:00 to 22:00", datestr = True)
+#        cr = Classroom.objects.get(name="Leacock132")
+        cr2 = Classroom.objects.get(name="Boardroom")
+        
+#        cr.make_soft_booking(ts, a_user)
+        
+        cr2.make_soft_booking(ts, a_user)        
+        
+        
+        
 #        bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
 #        print(bk)
 #        'America/Montreal'
