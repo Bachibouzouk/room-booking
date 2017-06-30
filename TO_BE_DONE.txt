@@ -62,6 +62,7 @@ two types of user (special for HB)
 If email not the right format (i.e. first.last@mcgill.ca), notify failure. Similarly, if email absent, notify failure instead of crashing.
 Give option to modify (reduce) a booking time slots
 
+#there is a fonction 'flush_past_bookings' that can be used for that
 Past bookings (before current date) needs to be removed
 
 #go back to view and notify
@@ -76,7 +77,7 @@ what is the maximum duration for a booking's timeslot
 create a view
 login through link to manage all bookings
 
-write a test for that
+# PF wrote a test for that
 forbid one user to book multiple rooms at same time
 
 not have the tick option for HB for simple users

@@ -6,6 +6,7 @@ from django.utils import timezone
 from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
                         
+from .room_booking_exception import BookingError
                         
 from .email_management import send_email, is_from_mcgill
 import random

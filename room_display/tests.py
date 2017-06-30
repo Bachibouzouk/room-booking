@@ -7,6 +7,7 @@ from .models import Classroom, BOOKING_FREE_TYPE, \
 
 from .date_play import TimeSlot
 
+from .room_booking_exception import BookingError
 
 class TimeSlotMethodTests(TestCase):
     
@@ -55,7 +56,16 @@ class ClassRoomMethodTests(TestCase):
         self.cr = Classroom.objects.create(name="TEST",
                                            location="TEST",
                                            number_seats=70)
+                                           
+        
+        self.cr2 = Classroom.objects.create(name="TEST_2",
+                                           location="TEST_2",
+                                           number_seats=40)        
+        
         self.cr.save()
+        
+        self.cr2.save()        
+        
         timeslots=[TimeSlot("2016-05-02 from 09:00 to 10:00",datestr=True),
                    TimeSlot("2016-05-02 from 11:00 to 13:00",datestr=True),
                    TimeSlot("2016-05-03 from 11:00 to 13:00",datestr=True)]
@@ -223,3 +233,131 @@ class ClassRoomMethodTests(TestCase):
 #        booking = self.cr.booking_set.filter(email = "pierre-francois.duc@mail.mcgill.ca")
 #        print(booking)
 #        booking[0].cancel()
+        
+    def test_one_user_softbooks_multiple_rooms(self):
+        # test that one softuser cannot book more than one room at the time
+    
+        ts = TimeSlot(date = timezone.now()+timezone.timedelta(1),
+                              duration=1)       
+
+        #counts how many bookings there are initially into each class rooms
+        num_previous_bookings_cr = len(self.cr.booking_set.all())
+        
+        num_previous_bookings_cr2 = len(self.cr2.booking_set.all())
+        
+        a_user = "soft.test@mcgill.ca"        
+        
+        self.cr.make_soft_booking(ts, a_user)
+        
+        with self.assertRaises(BookingError):
+            self.cr2.make_soft_booking(ts, a_user)
+
+        num_current_bookings_cr = len(self.cr.booking_set.all())
+        
+        num_current_bookings_cr2 = len(self.cr2.booking_set.all())
+        
+        d_cr = num_current_bookings_cr - num_previous_bookings_cr
+        
+        d_cr2 = num_current_bookings_cr2 - num_previous_bookings_cr2
+
+#        bk = Booking.objects.filter(email ="troll@test.caution",date_start__gt=ts.date_start)
+        self.assertNotEqual(d_cr,d_cr2)   
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
