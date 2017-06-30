@@ -39,6 +39,7 @@ need to be able to tell the constructor of the SelectDateTime class which defaul
 #done PF
 need to flush the bookings that are older than the current time
 
+#done oulin
 need to make the booking of past time impossible (not so important)
 
 #(in the template when we have the information)
@@ -58,7 +59,6 @@ Make things pretty css
 #django tutorial
 two types of user (special for HB)
 
-
 If email not the right format (i.e. first.last@mcgill.ca), notify failure. Similarly, if email absent, notify failure instead of crashing.
 Give option to modify (reduce) a booking time slots
 
@@ -66,7 +66,6 @@ Past bookings (before current date) needs to be removed
 
 #go back to view and notify
 If email not the right format (i.e. first.last@mcgill.ca), notify failure
-
 
 Give option to modify (reduce) a booking time slots
 
