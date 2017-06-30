@@ -13,6 +13,18 @@ WEEKDAYS_CODE = ['M','T','W','R','F','S','U']
 from room_display.date_play import HOUR_MIN, HOUR_MAX, TimeSlot
 
 def mainf():
+    """
+    McGill provides us with a schedule where the rooms are free to be booked in
+    a csv file. For us it is more interesting to know when McGill wants the
+    rooms so we can hardbook them in our sytem, every timeslots remaining could
+    then be softbooked by users.
+    
+    This fonction parse the file, look for when the rooms are free, and figure
+    out when they aren't, store that into a dict with the room and the 
+    timeslots and store each dict into an array which is returned
+    """    
+    
+    
     fname = "C:\\Users\\pfduc\\Documents\\room-booking\\Output_by_mcgill_system.csv"
     
     start_data = False
@@ -32,11 +44,14 @@ def mainf():
                 
                 weekdate_start =  timezone.datetime.strptime(weekdate_start, '%d-%b-%Y')
             
-            #parse only the meaningful data
+            #parse only the meaningful data (see at the end of the loop)
             if start_data:
 
+                #information about the days of the week the time information
+                #will refer to
                 weekdays = row[3].strip().split(' ')
- 
+                
+                #hours it starts to be free and hours it stops
                 time_start, time_stop = row[4].strip().split('  -  ')
                 
                 #will contain which time slots aren't available so we can
