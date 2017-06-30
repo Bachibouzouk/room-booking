@@ -91,7 +91,6 @@ def roomview(request, room_name, counter_day=None, counter_time=None, time=None)
         raise Http404("Room does not exist :" + str(room_name))
         
         
-        
     return render(request, 'room_display/room_view.html',
                   {'room': room, 'booking_list': booking_list, 'dates': dates,
                    'weekdays': weekdays, "timeslots": timeslots,
@@ -157,9 +156,7 @@ def modify_booking_view(request, hashed_key = None):
     return render(request, 'room_display/modify_booking.html', locals())
 
 
-def confirmbookingview(request, room_name):
-
-
+def confirmbookingview(request, room_name): 
     try:
         #get the room in the DB by its name
         room = Classroom.objects.get(name=room_name)
@@ -174,8 +171,6 @@ def confirmbookingview(request, room_name):
 
         
             if "booking_slot" in query_dict.keys():
-
-            
                 #fetch the requested booking slots
                 requested_bookings = request.POST.getlist("booking_slot")
                 # append the timeslots together if they are concomittent
@@ -211,7 +206,7 @@ def confirmbookingview(request, room_name):
                             room.make_hard_booking(booking_timeslot)
                     else:
                         for booking_timeslot in booking_timeslots:
-                            room.make_soft_booking(booking_timeslot,email)
+                            room.make_soft_booking(booking_timeslot, email)
                 elif decision == "cancelled":
                     #do nothing
                     pass

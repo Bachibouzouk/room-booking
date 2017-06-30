@@ -19,8 +19,6 @@ class TimeSlotMethodTests(TestCase):
         self.ts = TimeSlot(
             date = timezone.datetime(2016,3,2,4,0,0,tzinfo=timezone.utc),
             duration=1)
-            
-
     
     def test_create_a_time_slot_from_date_and_duration(self):
         self.assertEqual(self.date,"%s"%(self.ts))
@@ -34,7 +32,7 @@ class TimeSlotMethodTests(TestCase):
     def test_create_a_time_slot_from_string_switch_start_stop(self):
         datestr="2016-05-02 from 10:00 to 09:00"
         with self.assertRaises(ValueError):
-            TimeSlot(datestr,datestr=True)
+            TimeSlot(datestr, datestr = True)
 
     def test_instance_print(self):
         self.assertEqual(self.datestr,"%s"%(self.ts_str))
@@ -110,19 +108,15 @@ class ClassRoomMethodTests(TestCase):
         self.assertEqual(self.cr.is_booked(ts), False)
         
     def test_make_soft_booking_soft_booking_timeslot_already_exists(self):
-        
-        ts=TimeSlot("2016-05-02 from 09:00 to 10:00", datestr = True)        
-        num_previous_bookings = len(self.cr.booking_set.all())
-        
+        ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)
         self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
-        num_current_bookings = len(self.cr.booking_set.all())
-        
-        #the hardbooking should destroy the soft booking existing
-        self.assertEqual(num_previous_bookings,num_current_bookings)        
+        with self.assertRaises(ValueError):
+            self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
+     
         
     def test_make_soft_booking_booking_timeslot_is_free(self):
         
-        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
+        ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)       
         num_previous_bookings = len(self.cr.booking_set.all())
         
         self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
@@ -171,11 +165,10 @@ class ClassRoomMethodTests(TestCase):
         
 
     def test_flush_past_bookings(self):
-        
-        current_ts = TimeSlot(date = timezone.now()+timezone.timedelta(1),
+        current_ts = TimeSlot(date = timezone.now() + timezone.timedelta(1),
                               duration=1)
         
-        past_ts = TimeSlot(date = timezone.now()-timezone.timedelta(1),
+        past_ts = TimeSlot(date = timezone.now() - timezone.timedelta(1),
                               duration=1)
             
         self.cr.booking_set.create(date_start = current_ts.date_start,
@@ -194,21 +187,21 @@ class ClassRoomMethodTests(TestCase):
         
     def test_adjacent_soft_booking_merge(self):
         # test merging between two consecutive bookings
-        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
-        ts2=TimeSlot("2016-05-02 from 17:00 to 19:00", datestr = True)        
+        ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)
+        ts2 = TimeSlot(date = ts.date_stop, duration = 1)
         num_previous_bookings = len(self.cr.booking_set.all())
         
         self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
         self.cr.make_soft_booking(ts2, "soft.test@mcgill.ca")
         num_current_bookings = len(self.cr.booking_set.all())
 
-        self.assertEqual(num_previous_bookings + 1,num_current_bookings)
+        self.assertEqual(num_previous_bookings + 1, num_current_bookings)
         
-    def test_adjacent_soft_booking_merge2(self):
+    def test_adjacent_soft_booking_merge_sandwich(self):
         # test merging for when new booking is sandwiched between two old ones
-        ts=TimeSlot("2016-05-02 from 15:00 to 17:00", datestr = True)        
-        ts2=TimeSlot("2016-05-02 from 18:00 to 19:00", datestr = True)  
-        ts3=TimeSlot("2016-05-02 from 17:00 to 18:00", datestr = True)
+        ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)
+        ts2 = TimeSlot(date = ts.date_stop, duration = 1)
+        ts3 = TimeSlot(date = ts2.date_stop, duration = 1)
         num_previous_bookings = len(self.cr.booking_set.all())
         
         self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
@@ -216,7 +209,26 @@ class ClassRoomMethodTests(TestCase):
         self.cr.make_soft_booking(ts3, "soft.test@mcgill.ca")
         num_current_bookings = len(self.cr.booking_set.all())
 
-        self.assertEqual(num_previous_bookings,num_current_bookings)
+        self.assertEqual(num_previous_bookings + 1, num_current_bookings)
+        
+    def test_adjacent_soft_booking_merge_sandwich2(self):
+        # test merging for when new booking is sandwiched between two old ones 2
+        ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)
+        ts2 = TimeSlot(date = ts.date_stop, duration = 1)
+        ts3 = TimeSlot(date = ts2.date_stop, duration = 1)
+        
+        self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
+        self.cr.make_soft_booking(ts3, "soft.test@mcgill.ca")
+        num_previous_bookings = len(self.cr.booking_set.all())
+        self.cr.make_soft_booking(ts2, "soft.test@mcgill.ca")
+        num_current_bookings = len(self.cr.booking_set.all())
+        self.assertEqual(num_previous_bookings - 1, num_current_bookings)
+        
+    def test_past_time_booking(self):
+        # make sure it is impossible to book past times
+        past_ts = TimeSlot(date = timezone.now() - timezone.timedelta(2), duration = 1)
+        with self.assertRaises(ValueError):
+            self.cr.make_soft_booking(past_ts, "soft.test@mcgill.ca")        
         
 #    def test_modify_booking(self):
 #        
