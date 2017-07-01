@@ -4,11 +4,11 @@ from random import randint
 from django.utils import timezone
 
 from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
-                        HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
+                        HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step #MINUTE_CHOICES
                         
-from .room_booking_exception import BookingError
+from .room_booking_exception import BookingError, TimeSlotError
                         
-from .email_management import send_email, is_from_mcgill
+from .email_management import send_email, is_from_mcgill, MCGILL_SERVERS
 import random
 import uuid     
                         
@@ -23,7 +23,6 @@ BOOKING_HARD_TYPE = 2
 DEBUG = True
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
-
     return start + timezone.timedelta(
         seconds=randint(0, int((end - start).total_seconds())))
 
@@ -170,22 +169,23 @@ class Classroom(models.Model):
         if not isinstance(booking_timeslot, TimeSlot):
             raise TypeError("The timeslot instance is not of the right type.")
             return
-        
-        # Check that the email is from McGill  
-        if not is_from_mcgill(email):
-            raise ValueError("The given email is not the correct format.")
-            return
 
         # Check that the room isn't already booked
         if self.is_booked(booking_timeslot):
-            raise ValueError("The given time slot is already booked.")
+            raise TimeSlotError("The given time slot %s is already booked." % booking_timeslot)
             return
             
         # Check if the time is in the past
         if booking_timeslot.date_stop <= timezone.now():
-            raise ValueError("The given time slot is before the current time.")
+            raise TimeSlotError("The given time slot %s is before the current time." % booking_timeslot)
             return
 
+        # Check that the email is from McGill  
+        if not is_from_mcgill(email):
+            raise BookingError("The given email address %s is not the correct format. The correct formats are %s."
+                    % (email, ", ".join(MCGILL_SERVERS)))
+            return
+            
         ###### Make the booking ######
         alreadyMerged = False
         

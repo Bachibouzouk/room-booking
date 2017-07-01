@@ -11,7 +11,7 @@ import hashlib
 
 
 
-MCGILL_SERVERS =['mail.mcgill.ca','mcgill.ca']
+MCGILL_SERVERS =['mail.mcgill.ca', 'mcgill.ca']
 
 def send_email(pwd, recipient, subject, body, user):
 

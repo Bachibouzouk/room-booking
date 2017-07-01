@@ -2,6 +2,9 @@
 
 <p>Select the times you would like to book the room and enter your email address below (the email address is used to notify you if changes occur in the booking availabilities)</p>
 
+{% if errorMessage %}
+<font color="red">{{ errorMessage }} </font> </br> <a href="{% url 'room_display:index' %}">Back to index</a> </font> </br>  <a href="{% url 'room_display:room_view' room.name%}">Back to {{room.name}}</a>
+{% endif %}
 
 {% if booking_timeslots %}
 <p>

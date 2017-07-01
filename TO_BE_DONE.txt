@@ -1,46 +1,6 @@
-#done PF
-need to check if the email address is a mcgill one before I can accept the reservation (maybe send a check email)
-
-#done (PF) in check_things.py it is fairly easy :)
-need to be able to find all the booking made by one user
-
-#done PF
-need to be able to "hard book" any room and it should send a email to all users who had soft reservations
-
-#done PF
-need to find an available room for the time at which the user requests
-
-#done PF for capacity and date
-need to find a room depending on crossed field (room size, timeslots, etc...)
-
-#done PF
-need to create a log file of all booking made
-
-#done PF
-need to be able to update the periods where the rooms are hard booked from a routine (ie reading the file generated from banner with the latest changes)
-
-#done Oulin
-need to merge bookings if a user book a timeslot which is in the neighbouring of one of its previous booking
-
 in case of HB over SB, if there is a conflict over, say the last 30 min of a booking, should we cancel the whole timeslot? I think we shouldn't
 
 if a (hard) booking is made from a certain hour to another hour which doesn't match our timeslots, does that work? I think it should
-
-#implemented PF
-if soft booking is erased by HB, then send a notification email.
-
-#implemented PF
-A user should be able to cancel their booking (send and email with a link they need to click)
-http://stackoverflow.com/questions/24935271/django-custom-user-email-account-verification
-
-# done (oulin) - the constructor of SelectDateTime doesn't initialize the values, but the initial values are changed in views.py
-need to be able to tell the constructor of the SelectDateTime class which default values the combo boxes for the time and date should take
-
-#done PF
-need to flush the bookings that are older than the current time
-
-#done oulin
-need to make the booking of past time impossible (not so important)
 
 #(in the template when we have the information)
 need to make the display of the room with their capacity and location in the room_display section (we might want to discuss that)
@@ -59,18 +19,14 @@ Make things pretty css
 #django tutorial
 two types of user (special for HB)
 
-If email not the right format (i.e. first.last@mcgill.ca), notify failure. Similarly, if email absent, notify failure instead of crashing.
 Give option to modify (reduce) a booking time slots
 
-#there is a fonction 'flush_past_bookings' that can be used for that
+#there is a function 'flush_past_bookings' that can be used for that
 Past bookings (before current date) needs to be removed
 
-#go back to view and notify
-If email not the right format (i.e. first.last@mcgill.ca), notify failure
-
 Give option to modify (reduce) a booking time slots
 
-#ask the registar
+#ask the registrar
 what is the maximum duration for a booking's timeslot
 
 create a view
@@ -90,7 +46,7 @@ search options:
 
 you can't search if you don't provide at least the date
 
-search by date only and it shows all rooms with their availabilty on that date in a list style like McGill library
+search by date only and it shows all rooms with their availability on that date in a list style like McGill library
 
 search by date and timeslots and it will give you the rooms list that are available
 

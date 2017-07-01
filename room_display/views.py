@@ -12,10 +12,11 @@ from .models import Classroom, Booking, Calendar, SelectDateTime, CancelBooking
 
 from django.views import generic
 
-from .email_management import send_encrypted_link,check_encription
+from .email_management import send_encrypted_link, check_encription
 
 import hashlib
 import uuid
+from .room_booking_exception import BookingError, TimeSlotError
 
 """
 using the function render() to do the same thing as loading the template
@@ -178,7 +179,7 @@ def confirmbookingview(request, room_name):
             
             else:
                 #if the booking timeslots are not present we return to the page
-                return redirect("http://%s/room_display/%s"%(request.META["HTTP_HOST"],room.name))
+                return redirect("http://%s/room_display/%s" % (request.META["HTTP_HOST"], room.name))
         
             if "email" in query_dict.keys():
                 email = request.POST["email"]
@@ -204,9 +205,27 @@ def confirmbookingview(request, room_name):
                     if "hard_book" in query_dict.keys():
                         for booking_timeslot in booking_timeslots:
                             room.make_hard_booking(booking_timeslot)
-                    else:
+                    else: # soft booking
                         for booking_timeslot in booking_timeslots:
-                            room.make_soft_booking(booking_timeslot, email)
+                            try:
+                                room.make_soft_booking(booking_timeslot, email)
+                            except TimeSlotError as e:
+                                return render(request, 
+                                    'room_display/confirm_booking_view.html', 
+                                    {"room": room, 
+                                     "booking_timeslots": booking_timeslots,
+                                     "email": email, 
+                                     "errorMessage" : e})
+                            except BookingError as e:
+                                return render(request, 
+                                    'room_display/confirm_booking_view.html', 
+                                    {"room": room, 
+                                     "booking_timeslots": booking_timeslots,
+                                     "email": email, 
+                                     "errorMessage" : e})
+                            except:
+                                raise
+                                
                 elif decision == "cancelled":
                     #do nothing
                     pass
@@ -216,7 +235,7 @@ def confirmbookingview(request, room_name):
 
                 #In both cases return to the roomview
                 #I couldn't make the f**** redirect function to work with the url name
-                return redirect("http://%s/room_display/%s"%(request.META["HTTP_HOST"],room.name))
+                return redirect("http://%s/room_display/%s" % (request.META["HTTP_HOST"],room.name))
             
             else:
                 #This key is not present then it means we arrived on this page from room_view
