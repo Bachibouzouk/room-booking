@@ -186,6 +186,12 @@ class Classroom(models.Model):
                     % (email, ", ".join(MCGILL_SERVERS)))
             return
             
+        # Check if the booking already exists in another room
+        bookingFilterTemp = Booking.objects.filter(email = email,
+                                      date_start = booking_timeslot.date_start)
+        if len(bookingFilterTemp) > 0:
+            raise(BookingError("The user '%s' has alreay a booking in other \
+rooms at the same time and this is not allowed."%(email)))
         ###### Make the booking ######
         alreadyMerged = False
         
