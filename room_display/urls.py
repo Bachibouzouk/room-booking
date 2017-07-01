@@ -1,4 +1,5 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
+from django.contrib import admin
 
 from . import views
 
@@ -12,5 +13,7 @@ urlpatterns = [
 
     url(r'^modify_booking/$', views.modify_booking_view, name = 'modify_booking_view'),
     url(r'^(?P<room_name>.+)/confirm_booking/$', views.confirmbookingview, name = 'confirm_booking_view'),
-    url(r'^(?P<room_name>.+)/$', views.roomview, name='room_view'),  #    url(r'^(?P<room_name>.+)/(?P<time>.+)$', views.roomview, name='room_view'),    
+    url(r'^browse_room/(?P<room_name>.+)/$', views.roomview, name='room_view'),  #    url(r'^(?P<room_name>.+)/(?P<time>.+)$', views.roomview, name='room_view'),    
+    url(r'/admin',include(admin.site.urls))
 ]
+
