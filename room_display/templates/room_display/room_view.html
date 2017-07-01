@@ -47,11 +47,12 @@ Existing bookings
 {%endif%}
 
 {%if t.1 == 1%}
-    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> SB  </td>
+    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}" disabled> <font color="blue"> Soft Booked </font>  </td>
 {%elif t.1 == 2%} 
-    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> HB  </td>
+    <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}" disabled> <font color="red"> Hard Booked </font>  </td>
 {%elif t.1 == 0%}
-  <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> Free  </td>
+  <td> <input type="checkbox" name="booking_slot" value="{{ t.0 }}"> <font color="green"> Free </font>
+  </td>
 {%endif%}
 
 {%endfor%}

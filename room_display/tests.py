@@ -7,7 +7,7 @@ from .models import Classroom, BOOKING_FREE_TYPE, \
 
 from .date_play import TimeSlot
 
-from .room_booking_exception import BookingError
+from .room_booking_exception import BookingError, TimeSlotError
 
 class TimeSlotMethodTests(TestCase):
     
@@ -110,7 +110,7 @@ class ClassRoomMethodTests(TestCase):
     def test_make_soft_booking_soft_booking_timeslot_already_exists(self):
         ts = TimeSlot(date = timezone.now() + timezone.timedelta(1), duration = 1)
         self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TimeSlotError):
             self.cr.make_soft_booking(ts, "soft.test@mcgill.ca")
      
         
@@ -227,7 +227,7 @@ class ClassRoomMethodTests(TestCase):
     def test_past_time_booking(self):
         # make sure it is impossible to book past times
         past_ts = TimeSlot(date = timezone.now() - timezone.timedelta(2), duration = 1)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TimeSlotError):
             self.cr.make_soft_booking(past_ts, "soft.test@mcgill.ca")        
         
 #    def test_modify_booking(self):
