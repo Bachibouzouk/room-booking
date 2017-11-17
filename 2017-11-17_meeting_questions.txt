@@ -1,0 +1,7 @@
+How can we send emails without using our emails addresses?
+
+How can we get the information between hard booking and us flowing (use files of the same format as the .csv produced for SSMU students)
+
+How can we get information about the rooms to populate our DB
+
+Where can we host the server?
