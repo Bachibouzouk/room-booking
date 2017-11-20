@@ -1,7 +1,70 @@
-How can we send emails without using our emails addresses?
+*** How can we send emails without using our emails addresses?
 
-How can we get the information between hard booking and us flowing (use files of the same format as the .csv produced for SSMU students)
+The softbooking system needs to send email to the user to modify reservations.
+The code has been tested using mailhost.mcgill.ca @physics.mcgill.ca and it worked, but in the future it might be better to
+have something like no-reply-softbooking@mcgill.ca or equivalent.
 
-How can we get information about the rooms to populate our DB
+-> touch point with developper
 
-Where can we host the server?
+
+*** How can we get the information between hard booking and us flowing (use files of the same format as the .csv produced for SSMU students)
+IT is going to look into it, should be possible
+
+
+*** How can we get information about the rooms to populate our DB
+
+seat size, room attributes, oracle 
+
+Buisness Need Statement
+
+
+*** Where can we host the server?
+
+add python3, django and all dependencies to the BNS
+
+Pip dependencies (some of them come along with django)
+
+colorama==0.3.7
+decorator==4.0.10
+Django==1.10.1
+ipdb==0.10.1
+ipython==5.1.0
+ipython-genutils==0.1.0
+Naked==0.1.31
+numpy==1.11.1
+pickleshare==0.7.4
+prompt-toolkit==1.0.8
+Pygments==2.1.3
+PyYAML==3.12
+requests==2.11.1
+shellescape==3.4.1
+simplegeneric==0.8.1
+six==1.10.0
+traitlets==4.3.1
+wcwidth==0.1.7
+win-unicode-console==0.5
+
+
+
+people present :
+
+IT :
+Steve
+Marie-Eve
+Marissa
+
+Anna
+
+Oulin
+
+Requests :
+
+Ask students purpose of booking the room
+
+Add disclaimer that the disclaimer for maintaining the room clean (with tick box) and McGill retains right to the rooms
+
+Add information about the hard booking official way on the front page
+
+Tell security and cleaners about the culture change : student can be in rooms when there is no class
+
+Ask building directors which rooms are available for booking by students
