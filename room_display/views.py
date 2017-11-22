@@ -133,7 +133,11 @@ def modify_booking_view(request, hashed_key = None):
                        
                 if "send_email" in query_dict.keys():
                     sha_key = bk_key
-                    send_encrypted_link("pfduc87@gmail.com", booking.email, sha_key, "http://%s/room_display/modify_booking/"%(request.META["HTTP_HOST"]))
+                    title = "Soft-booking modification or cancellation"
+                    send_encrypted_link("pfduc@physics.mcgill.ca", booking.email,
+                                        title,
+                                        sha_key, 
+                                        "http://%s/room_display/modify_booking/"%(request.META["HTTP_HOST"]))
              
             
         elif request.method == 'GET':

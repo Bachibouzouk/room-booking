@@ -13,10 +13,13 @@ import hashlib
 
 MCGILL_SERVERS =['mail.mcgill.ca','mcgill.ca']
 
-def send_email(pwd, recipient, subject, body, user):
+def send_email(recipient, subject, body,
+               user = "softbooking@physics.mcgill.ca", pwd = None):
 
     gmail_user = user
+    
     gmail_pwd = pwd
+        
     FROM = user
     TO = recipient if type(recipient) is list else [recipient]
     SUBJECT = subject
@@ -25,24 +28,44 @@ def send_email(pwd, recipient, subject, body, user):
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
     """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
-    try:
+    
 		#here we should use smtp.mcgill.ca or something similar
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_user, gmail_pwd)
+    if not gmail_pwd is None:
+        
+        try:
+            
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.ehlo()
+            server.starttls()
+            server.login(gmail_user, gmail_pwd)
+            server.sendmail(FROM, TO, message)
+            server.close()
+            print('successfully sent the mail to %s'%(recipient))
+            
+        except:
+            
+            print("failed to send mail to %s"%(recipient))
+
+    else:
+        
+#        try:
+
+        server = smtplib.SMTP("mailhost.mcgill.ca", 25)
         server.sendmail(FROM, TO, message)
         server.close()
-        print('successfully sent the mail to %s'%(recipient))
-    except:
-        print("failed to send mail to %s"%(recipient))
+        print("successfully sent the mail to %s"%(recipient))
+            
+#        except:
+#            
+#            print("failed to send mail to %s"%(recipient))
+            
 
 def send_encrypted_link(email, information, title, key, link):
     
     act_key = hashlib.sha256(key.encode() + information.encode()).hexdigest()
     link="%s%s"%(link,act_key)
     print(link)
-    send_email(pw,email,title,link,user)     
+    send_email(email,title,link)     
                     
 def check_encription(hashed_value, value,salt):
     """returns true if the value and the hashed values are identical after hashing of the value """
@@ -93,4 +116,7 @@ def is_from_mcgill(email):
             print(msg)
             return False
 if __name__ == "__main__":
+    
     print(is_from_mcgill([".@mail.mcgill.ca",".e@mail.mcgill.ca","a.@mail.mcgill.ca","a.b@mail.mcgill.ca","@mail.mcgill.ca","a@mail.mcgill.ca","pfduc@mcgill.ca","132@mcgill.ca"]))
+    
+    send_email("pfduc@physics.mcgill.ca","test","haha")

@@ -7,7 +7,7 @@ from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
                         HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
                         
                         
-from .email_management import send_email, is_from_mcgill
+from .email_management import send_encrypted_link, is_from_mcgill
 import random
 import uuid     
                         
@@ -370,8 +370,8 @@ class Booking(models.Model):
 
     def cancel(self):
         """
-        this function should send an email to the person who made the booking to to tell them it has been cancelled
-        it should then delete the booking                
+        this function should send an email to the person who made the booking
+        to tell them it has been cancelled, it should then delete the booking                
         """
         
         #I need to work out the encrypting of the email of the person or the booking reference 
@@ -380,12 +380,14 @@ class Booking(models.Model):
         information = "%s"%(self.email)
 #        useremail = self.email
         act_key = hashlib.sha256(self.key.encode() + information.encode()).hexdigest()
+        
+        print(act_key)
 #        if isinstance(useremail, unicode):
 #        useremail = useremail.encode('utf8')
 #        act_key= "23jsjsnb652jss394h5h595n0"#hashlib.sha1(salt+useremail).hexdigest()
-        
+        title = "manage your booking"
         link = u"http://127.0.0.1:8000/activate/%s"%(act_key)
-#        send_email(pw,recipient,title,link,user)     
+        send_encrypted_link(self.email, information, title, act_key, link)     
 
 class RandomUser(models.Model):
 
