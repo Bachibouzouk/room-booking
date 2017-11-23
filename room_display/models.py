@@ -4,11 +4,10 @@ from random import randint
 from django.utils import timezone
 
 from .date_play import convert_timeslot_to_date, TimeSlot, DATE_CHOICES, \
-                        HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step #MINUTE_CHOICES
+                        HOUR_CHOICES, HOUR_STOP_CHOICES, HOUR_MIN, booking_step#MINUTE_CHOICES
                         
-from .room_booking_exception import BookingError, TimeSlotError
                         
-from .email_management import send_email, is_from_mcgill, MCGILL_SERVERS
+from .email_management import send_encrypted_link, is_from_mcgill
 import random
 import uuid     
                         
@@ -23,6 +22,7 @@ BOOKING_HARD_TYPE = 2
 DEBUG = True
 
 def random_date(start=timezone.datetime(1990, 10, 1, 10, 2, tzinfo=timezone.utc), end=timezone.now()):
+
     return start + timezone.timedelta(
         seconds=randint(0, int((end - start).total_seconds())))
 
@@ -53,7 +53,7 @@ class SelectDateTime(forms.Form):
 
 class CancelBooking(forms.Form):
     
-    email = forms.EmailField(max_length = 200)
+    send_email = forms.EmailField(max_length = 200)
 
 
 class Calendar(forms.Form):
@@ -162,105 +162,101 @@ class Classroom(models.Model):
     
     def make_soft_booking(self, booking_timeslot, email):
         """
-        This method recieve a timeslot and an email and creates a booking.
+        this method recieve a timeslot and an email and creates a booking if it
+        doesn't clash with an existing one
         """
         
-        # Check the timeslot is the correct format
-        if not isinstance(booking_timeslot, TimeSlot):
-            raise TypeError("The timeslot instance is not of the right type.")
-            return
+        if isinstance(booking_timeslot, TimeSlot):
+            #check that the email is from McGill 
+            if is_from_mcgill(email):
+                #check that the room isn't already booked
+                if not self.is_booked(booking_timeslot):
+                    # check if we can append a current booking
+#                    self.booking_set.all().delete()
+                    alreadyMerged = False
+                    # if new booking follows an existing booking
+                    bookingFilterTemp = self.booking_set.filter(email = email, date_stop = booking_timeslot.date_start)
+                    if len(bookingFilterTemp) == 1:
+                        self.booking_set.filter(email = email, date_stop = booking_timeslot.date_start).delete()
+                        self.booking_set.create(
+                                            date_start = bookingFilterTemp[0].date_start,
+                                            date_stop = booking_timeslot.date_stop,
+                                            email = email,
+                                            booking_type = BOOKING_SOFT_TYPE,
+                                            key = uuid.uuid4().hex
+                                            )
+                        alreadyMerged = True
+                        mergedDateStart = bookingFilterTemp[0].date_start
+                        
+                        #keep a record of the soft booking made
+                        of = open(LOG_FILE_NAME,'a')
+                        of.write("%s,\t" % (timezone.now()))
+                        of.write("%s,\t" % (self.name))
+                        of.write("%s,\t" % (booking_timeslot))
+                        of.write("%s,\t" % (email))
+                        of.write("SOFT booking merged with %s,\n" % str(bookingFilterTemp[0]))
+                        of.close()
+                    elif len(bookingFilterTemp) > 1:
+                        print("PROBLEM: CANNOT HAVE MULTIPLE TIMESLOT MATCHES")
+                        
+                    # if existing booking follows a new booking
+                    bookingFilterTemp = self.booking_set.filter(email = email, date_start = booking_timeslot.date_stop)
+                    if len(bookingFilterTemp) == 1:
+                        # delete the existing booking
+                        self.booking_set.filter(email = email, date_start = booking_timeslot.date_stop).delete()
+                        if alreadyMerged: # if this is second time merging
+                            # delete previous merged version
+                            self.booking_set.filter(email = email, date_start = mergedDateStart).delete() 
+                            self.booking_set.create(
+                                                date_start = mergedDateStart,
+                                                date_stop = bookingFilterTemp[0].date_stop,
+                                                email = email,
+                                                booking_type = BOOKING_SOFT_TYPE,
+                                                key = uuid.uuid4().hex)
+                        else: # create new
+                            self.booking_set.create(
+                                                date_start = booking_timeslot.date_start,
+                                                date_stop = bookingFilterTemp[0].date_stop,
+                                                email = email,
+                                                booking_type = BOOKING_SOFT_TYPE,
+                                                key = uuid.uuid4().hex)
+                            alreadyMerged = True
+                        #keep a record of the soft booking made
+                        of = open(LOG_FILE_NAME,'a')
+                        of.write("%s,\t" % (timezone.now()))
+                        of.write("%s,\t" % (self.name))
+                        of.write("%s,\t" % (booking_timeslot))
+                        of.write("%s,\t" % (email))
+                        of.write("SOFT booking merged with %s,\n" % str(bookingFilterTemp[0]))
+                        of.close()
+                        
+                    elif len(bookingFilterTemp) > 1:
+                        print("PROBLEM: CANNOT HAVE MULTIPLE TIMESLOT MATCHES")  
 
-        # Check that the room isn't already booked
-        if self.is_booked(booking_timeslot):
-            raise TimeSlotError("The given time slot %s is already booked." % booking_timeslot)
-            return
-            
-        # Check if the time is in the past
-        if booking_timeslot.date_stop <= timezone.now():
-            raise TimeSlotError("The given time slot %s is before the current time." % booking_timeslot)
-            return
-
-        # Check that the email is from McGill  
-        if not is_from_mcgill(email):
-            raise BookingError("The given email address %s is not the correct format. The correct formats are %s."
-                    % (email, ", ".join(MCGILL_SERVERS)))
-            return
-            
-        # Check if the booking already exists in another room
-        bookingFilterTemp = Booking.objects.filter(email = email,
-                                      date_start = booking_timeslot.date_start)
-        if len(bookingFilterTemp) > 0:
-            raise(BookingError("The user '%s' has alreay a booking in other \
-rooms at the same time and this is not allowed."%(email)))
-        ###### Make the booking ######
-        alreadyMerged = False
-        
-        # if new booking follows an existing booking
-        bookingFilterTemp = self.booking_set.filter(email = email, date_stop = booking_timeslot.date_start)
-        
-        if len(bookingFilterTemp) == 1:
-            # delete the existing booking
-            self.booking_set.filter(email = email, date_stop = booking_timeslot.date_start).delete()
-            # make the new booking
-            self.booking_set.create(date_start = bookingFilterTemp[0].date_start, date_stop = booking_timeslot.date_stop, email = email, booking_type = BOOKING_SOFT_TYPE, key = uuid.uuid4().hex)
-            # reset booking start time            
-            mergedDateStart = bookingFilterTemp[0].date_start
-            alreadyMerged = True
-            
-            #keep a record of the soft booking made
-            of = open(LOG_FILE_NAME,'a')
-            of.write("%s,\t" % (timezone.now()))
-            of.write("%s,\t" % (self.name))
-            of.write("%s,\t" % (booking_timeslot))
-            of.write("%s,\t" % (email))
-            of.write("SOFT booking merged with %s,\n" % str(bookingFilterTemp[0]))
-            of.close()
-            
-        elif len(bookingFilterTemp) > 1:
-            print("PROBLEM: CANNOT HAVE MULTIPLE TIMESLOT MATCHES")
-            
-        # if existing booking follows a new booking
-        bookingFilterTemp = self.booking_set.filter(email = email, date_start = booking_timeslot.date_stop)
-        
-        if len(bookingFilterTemp) == 1:
-            # delete the existing booking
-            self.booking_set.filter(email = email, date_start = booking_timeslot.date_stop).delete()
-            # if this is second time merging
-            if alreadyMerged: 
-                # delete previous merged version
-                self.booking_set.filter(email = email, date_start = mergedDateStart).delete() 
-                # make the new booking
-                self.booking_set.create(date_start = mergedDateStart, date_stop = bookingFilterTemp[0].date_stop, email = email, booking_type = BOOKING_SOFT_TYPE, key = uuid.uuid4().hex)
-            else: 
-                # make the new booking
-                self.booking_set.create(date_start = booking_timeslot.date_start, date_stop = bookingFilterTemp[0].date_stop, email = email, booking_type = BOOKING_SOFT_TYPE, key = uuid.uuid4().hex)
-                alreadyMerged = True
-                
-            #keep a record of the soft booking made
-            of = open(LOG_FILE_NAME,'a')
-            of.write("%s,\t" % (timezone.now()))
-            of.write("%s,\t" % (self.name))
-            of.write("%s,\t" % (booking_timeslot))
-            of.write("%s,\t" % (email))
-            of.write("SOFT booking merged with %s,\n" % str(bookingFilterTemp[0]))
-            of.close()
-            
-        elif len(bookingFilterTemp) > 1:
-            print("PROBLEM: CANNOT HAVE MULTIPLE TIMESLOT MATCHES")  
-
-        if alreadyMerged == False:
-            self.booking_set.create(date_start = booking_timeslot.date_start, date_stop = booking_timeslot.date_stop, email = email, booking_type = BOOKING_SOFT_TYPE, key = uuid.uuid4().hex)
-            
-            #keep a record of the soft booking made
-            of = open(LOG_FILE_NAME,'a')
-            of.write("%s,\t"%(timezone.now()))
-            of.write("%s,\t"%(self.name))
-            of.write("%s,\t"%(booking_timeslot))
-            of.write("%s,\t"%(email))
-            of.write("SOFT booking,\n")
-            of.close()
-            return 0
-            
+                    if alreadyMerged == False:
+                        self.booking_set.create(
+                                            date_start = booking_timeslot.date_start,
+                                            date_stop = booking_timeslot.date_stop,
+                                            email = email,
+                                            booking_type = BOOKING_SOFT_TYPE,
+                                            key = uuid.uuid4().hex)
+                        
+                        #keep a record of the soft booking made
+                        of = open(LOG_FILE_NAME,'a')
+                        of.write("%s,\t"%(timezone.now()))
+                        of.write("%s,\t"%(self.name))
+                        of.write("%s,\t"%(booking_timeslot))
+                        of.write("%s,\t"%(email))
+                        of.write("SOFT booking,\n")
+                        of.close()
+                        return 0
+                    
+            else:
+                #the email isn't from McGill
+                print("The email %s isn't from McGill, you can't use that service sorry")
+                return 2
+        else:
+            raise TypeError("the timeslot instance is not of the right type")
     
     def make_hard_booking(self, booking_timeslot):
         """
@@ -374,8 +370,8 @@ class Booking(models.Model):
 
     def cancel(self):
         """
-        this function should send an email to the person who made the booking to to tell them it has been cancelled
-        it should then delete the booking                
+        this function should send an email to the person who made the booking
+        to tell them it has been cancelled, it should then delete the booking                
         """
         
         #I need to work out the encrypting of the email of the person or the booking reference 
@@ -384,12 +380,14 @@ class Booking(models.Model):
         information = "%s"%(self.email)
 #        useremail = self.email
         act_key = hashlib.sha256(self.key.encode() + information.encode()).hexdigest()
+        
+        print(act_key)
 #        if isinstance(useremail, unicode):
 #        useremail = useremail.encode('utf8')
 #        act_key= "23jsjsnb652jss394h5h595n0"#hashlib.sha1(salt+useremail).hexdigest()
-        
+        title = "manage your booking"
         link = u"http://127.0.0.1:8000/activate/%s"%(act_key)
-#        send_email(pw,recipient,title,link,user)     
+        send_encrypted_link(self.email, information, title, act_key, link)     
 
 class RandomUser(models.Model):
 
