@@ -49,8 +49,8 @@ def send_email(recipient, subject, body,
     else:
         
 #        try:
-
-        server = smtplib.SMTP("mailhost.mcgill.ca", 25)
+        #mailhost.mcgill.ca
+        server = smtplib.SMTP("mx0.physics.mcgill.ca", 25)
         server.sendmail(FROM, TO, message)
         server.close()
         print("successfully sent the mail to %s"%(recipient))

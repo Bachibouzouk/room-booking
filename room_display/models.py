@@ -53,7 +53,7 @@ class SelectDateTime(forms.Form):
 
 class CancelBooking(forms.Form):
     
-    email = forms.EmailField(max_length = 200)
+    send_email = forms.EmailField(max_length = 200)
 
 
 class Calendar(forms.Form):

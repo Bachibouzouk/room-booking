@@ -25,8 +25,10 @@ The booking related to this link no longer exists
 Please enter the email you used to make the booking : </br>{{modify_form}}
 </br>
   <input type="submit" value="Send identification email">
+  
 </form> 
 </p>
+
 {% elif booking %}
 
 Cancel the following booking :</br>
@@ -41,9 +43,11 @@ Cancel the following booking :</br>
 </p>
 
 {% else %}
-An email has been sent to {{email}} with an identification link
+An email has been sent to {{send_email}} with an identification link
 {% endif %}
 {% endif %}
 
 
-
+<p>
+<a href="{% url 'room_display:index' %}">Back to index</a>
+</p>
