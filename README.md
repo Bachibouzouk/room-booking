@@ -1,8 +1,6 @@
 ### What is this repository for? ###
 
 * This repository is a proposal for a room-booking app, allowing users to consult availability and reserve rooms. It was created for showcase to McGill administrators.
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
