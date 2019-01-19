@@ -1,10 +1,6 @@
-# README #
-
-This README would normally document whatever steps are necessary to get your application up and running.
-
 ### What is this repository for? ###
 
-* Quick summary
+* This repository is a proposal for a room-booking app, allowing users to consult availability and reserve rooms. It was created for showcase to McGill administrators.
 * Version
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
@@ -70,7 +66,8 @@ python manage.py your_code_file_name_without_extension
 ### Contribution guidelines ###
 
 * Writing tests
-You can write tests in the room_booking/room_display/test.py file, to run them type 
+
+write tests in the room_booking/room_display/test.py file, to run them type 
 ```
 #!python
 
@@ -82,5 +79,5 @@ python manage.py test room_display
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
+* Repo owner or admin : pfduc@physics.mcgill.ca
 * Other community or team contact
